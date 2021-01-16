@@ -1,0 +1,26 @@
+{
+  "name": "CSC_Assignment_2",
+  "version": "1.0.0",
+  "description": "Cloud and Service Development (ST0280) Assignment 2: Create a Software-as-a-Service (SaaS) Web App using Cloud Computing Services",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimberlybp/CSC_Assignment_2.git"
+  },
+  "keywords": [],
+  "author": "Wei Xian, Gynn, Kim, Ellice, Kwan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kimberlybp/CSC_Assignment_2/issues"
+  },
+  "homepage": "https://github.com/kimberlybp/CSC_Assignment_2#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7"
+  }
+}
