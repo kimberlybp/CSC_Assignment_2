@@ -27,31 +27,6 @@ app.get('/subscribe', function (req, res) {
     res.sendFile(filePath);
 });
 
-app.get('/setup', async (req, res) => {
-    var cid = '';
-    var stripeUserRef = database.ref('stripe_users');
-    var oneRow = stripeUserRef.child(firebase.auth().currentUser.uid);
-    oneRow.once('value', function (snap) {
-        snap.val()
-            ? res.send({
-                  publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-                  starterPrice: process.env.STARTER_PRICE_ID,
-                  basicPrice: process.env.BASIC_PRICE_ID,
-                  premiumPrice: process.env.PREMIUM_PRICE_ID,
-                  customer_id: snap.val().customer_id,
-                  customer_email: firebase.auth().currentUser.email,
-              })
-            : res.send({
-                  publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-                  starterPrice: process.env.STARTER_PRICE_ID,
-                  basicPrice: process.env.BASIC_PRICE_ID,
-                  premiumPrice: process.env.PREMIUM_PRICE_ID,
-                  customer_id: null,
-                  customer_email: firebase.auth().currentUser.email,
-              });
-    });
-});
-
 // App configs
 const server = http.createServer(app);
 const port = 3000;
