@@ -50,16 +50,16 @@ fetch('/setup')
     .then(function () {
         var publishableKey =
             'pk_test_51Hx6udF6nia1fA2P8wOMf1eodbJIt7gYStqUoDYJQjeTB97PPXmNPRjAHNkUyIot3x10XPIvWfNmbRg7ysMuusZV008fphPWNk';
-        var premiumPriceId = 'price_1ICnFzF6nia1fA2PrjjPHyEA';
+        var subscriptionPriceId = 'price_1ICnFzF6nia1fA2PrjjPHyEA';
         var customerId = '123';
-        var customerEmail = 'abc.com';
+        // var customerEmail = 'abc.com';
 
         var stripe = Stripe(publishableKey);
 
         // Setup event handler to create a Checkout Session when button is clicked
         document.getElementById('subscription-plan-btn').addEventListener('click', function (evt) {
             document.getElementById('loading-overlay').style.display = 'block';
-            createCheckoutSession(premiumPriceId, customerId).then(function (data) {
+            createCheckoutSession(subscriptionPriceId, customerId).then(function (data) {
                 // Call Stripe.js method to redirect to the new Checkout page
                 stripe
                     .redirectToCheckout({
@@ -69,12 +69,12 @@ fetch('/setup')
             });
         });
 
-        if (customerEmail) {
-            document.getElementById('welcome').innerHTML = 'Welcome ' + customerEmail + '!';
-        } else {
-            document.getElementById('welcome').innerHTML = 'Welcome guest user!';
-            document.getElementById('logout').innerHTML = 'Back to Login';
-        }
+        // if (customerEmail) {
+        //     document.getElementById('welcome').innerHTML = 'Welcome ' + customerEmail + '!';
+        // } else {
+        //     document.getElementById('welcome').innerHTML = 'Welcome guest user!';
+        //     document.getElementById('logout').innerHTML = 'Back to Login';
+        // }
 
         const manageBillingForm = document.querySelector('#manage-billing-form');
         manageBillingForm.addEventListener('submit', function (e) {
