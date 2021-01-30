@@ -51,7 +51,7 @@ fetch('/setup')
         var publishableKey =
             'pk_test_51Hx6udF6nia1fA2P8wOMf1eodbJIt7gYStqUoDYJQjeTB97PPXmNPRjAHNkUyIot3x10XPIvWfNmbRg7ysMuusZV008fphPWNk';
         var subscriptionPriceId = 'price_1ICnFzF6nia1fA2PrjjPHyEA';
-        var customerId = '123';
+        var customerId = 'cus_IfjppW291BfofB'; // Need a dynamic cus id
         // var customerEmail = 'abc.com';
 
         var stripe = Stripe(publishableKey);
@@ -86,7 +86,7 @@ fetch('/setup')
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    customerId: customerId,
+                    customerId: 'cus_IfjppW291BfofB', // Need a dynamic cus id
                 }),
             })
                 .then((response) => response.json())
