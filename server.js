@@ -95,6 +95,101 @@ app.get('/setup', (req, res) => {
     });
 });
 
+// listens to webhook
+// app.post('/webhook', bodyParser.raw({ type: '*/*' }), (request, response) => {
+//     let event;
+
+//     const signature = request.headers['stripe-signature'];
+
+//     try {
+//         event = stripe.webhooks.constructEvent(request.rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
+
+//         // https://stripe.com/docs/billing/subscriptions/overview#subscription-events
+//         // Handle the event
+//         switch (event.type) {
+//             //any changes to subscription such as upgrading or donwgrading to another plan
+//             case 'customer.subscription.updated':
+//                 sendToDB(
+//                     event.id,
+//                     event.data.object.id,
+//                     event.type,
+//                     createDateTimeString(event.created),
+//                     event.created,
+//                 );
+//                 break;
+//             //if customer cancels subscription
+//             case 'customer.subscription.deleted':
+//                 sendToDB(
+//                     event.id,
+//                     event.data.object.id,
+//                     event.type,
+//                     createDateTimeString(event.created),
+//                     event.created,
+//                 );
+//                 break;
+//             //occurs during successful charges
+//             case 'invoice.paid':
+//                 if (event.data.object.billing_reason.includes('subscription')) {
+//                     sendToDB(
+//                         event.id,
+//                         event.data.object.id,
+//                         event.type,
+//                         createDateTimeString(event.created),
+//                         event.created,
+//                     );
+//                 }
+//                 break;
+//             //occurs during failed charges
+//             case 'invoice.payment_failed':
+//                 if (event.data.object.billing_reason.includes('subscription')) {
+//                     sendToDB(
+//                         event.id,
+//                         event.data.object.id,
+//                         event.type,
+//                         createDateTimeString(event.created),
+//                         event.created,
+//                     );
+//                 }
+//                 break;
+//             default:
+//             //console.log(`Unhandled event type ${event.type}`);
+//         }
+
+//         // Return a response to acknowledge receipt of the event
+//         response.json({ received: true });
+//     } catch (err) {
+//         response.status(400).send(`Webhook Error: ${err.message}`);
+//     }
+// });
+
+// function sendToDB(eventid, id, type, datetime, timestamp) {
+//     var obj = {
+//         eventid: eventid,
+//         id: id,
+//         type: type,
+//         createdAt: datetime,
+//         timestamp: timestamp,
+//     };
+
+//     var oneRow = database.ref('subscription-log').child(obj.id);
+
+//     oneRow.update(obj, (error) => {
+//         if (error) {
+//             // The write failed...
+//             console.log('Failed with error: ' + error);
+//         } else {
+//             // The write was successful...
+//             console.log('success');
+//         }
+//     });
+// }
+
+// function createDateTimeString(timestamp) {
+//     var date = new Date(timestamp * 1000);
+//     var datetimeString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+//     return datetimeString;
+// }
+
 // App configs
 const server = http.createServer(app);
 const port = 3000;
