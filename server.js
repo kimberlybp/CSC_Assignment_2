@@ -18,6 +18,11 @@ app.get('/', function (req, res) {
     res.sendFile(filePath);
 });
 
+app.get('/login', function (req, res) {
+  const filePath = path.resolve(__dirname + "/src/login.html");
+  res.sendFile(filePath);
+});
+
 const server = http.createServer(app);
 const port = 3000;
 server.listen(port);
