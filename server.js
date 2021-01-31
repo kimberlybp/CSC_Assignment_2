@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const path = require('path');
+const bodyParser = require('body-parser');
 const app = express();
 
 const envFilePath = path.resolve(__dirname, './.env');
@@ -12,11 +13,18 @@ if (env.error) {
 app.use(express.json({limit: '50mb'}));
 app.use(express.static(process.env.STATIC_DIR));
 
+// Body Parser Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 // default URL for website
 app.get('/', function (req, res) {
     const filePath = path.resolve(__dirname + "/src/index.html");
     res.sendFile(filePath);
 });
+
+
+require('./routes')(app);
 
 const server = http.createServer(app);
 const port = 3000;
