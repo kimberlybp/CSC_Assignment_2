@@ -10,17 +10,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Firebase config
-const firebase = require('firebase');
-let firebaseConfig = {
-    apiKey: 'AIzaSyA_xy5TEEWiZZegx_zMV6l80vvp9TVEh5U',
-    authDomain: 'csc-assignment-2-436b4.firebaseapp.com',
-    projectId: 'csc-assignment-2-436b4',
-    storageBucket: 'csc-assignment-2-436b4.appspot.com',
-    messagingSenderId: '1079222292828',
-    appId: '1:1079222292828:web:134e6b9b77b5fa9321f199',
-};
-firebase.initializeApp(firebaseConfig);
-let database = firebase.database();
+const admin = require('firebase-admin');
+const serviceAccount = require('./csc-assignment-2-436b4-firebase-adminsdk-mltrx-144eb9f622.json');
+admin.initializeApp(
+    //functions.config().firebase
+    { credential: admin.credential.cert(serviceAccount) },
+);
+const db = admin.firestore();
 //
 
 const envFilePath = path.resolve(__dirname, './.env');
@@ -115,105 +111,140 @@ app.get('/setup', (req, res) => {
     });
 });
 
-app.post('/student', (req, res) => {
+app.post('/student', async (req, res) => {
     username = req.body.name;
-    email = req.body.email;
+    // email = req.body.email;
+
+    const docRef = db.collection('users').doc(username);
+    await docRef
+        .set({
+            gender: 'male',
+            FIN: '12345',
+            hobby: 'sleep',
+        })
+        .then(console.log(`user added!`))
+        .catch((err) => {
+            console.log(`adding failed`, err);
+        });
 });
 
 // listens to webhook
-// app.post('/webhook', bodyParser.raw({ type: '*/*' }), (request, response) => {
-//     let event;
+app.post('/webhook', (request, response) => {
+    const event = request.body;
 
-//     const signature = request.headers['stripe-signature'];
+    try {
+        // https://stripe.com/docs/billing/subscriptions/overview#subscription-events
+        // Handle the event
+        switch (event.type) {
+            case 'customer.subscription.created':
+                sendToDB(
+                    event.id,
+                    event.data.object.id,
+                    event.type,
+                    createDateTimeString(event.created),
+                    event.created,
+                );
+                break;
+            //any changes to subscription such as upgrading or donwgrading to another plan
+            case 'customer.subscription.updated':
+                sendToDBAgain(
+                    event.id,
+                    event.data.object.id,
+                    event.type,
+                    createDateTimeString(event.created),
+                    event.created,
+                );
+                break;
+            //if customer cancels subscription
+            case 'customer.subscription.deleted':
+                sendToDB(
+                    event.id,
+                    event.data.object.id,
+                    event.type,
+                    createDateTimeString(event.created),
+                    event.created,
+                );
+                break;
+            //occurs during successful charges
+            case 'invoice.finalized':
+                //               if (event.data.object.billing_reason.includes('subscription')) {
+                sendToDB(
+                    event.id,
+                    event.data.object.id,
+                    event.type,
+                    createDateTimeString(event.created),
+                    event.created,
+                );
+                //             }
+                break;
+            //occurs during failed charges
+            case 'invoice.payment_failed':
+                if (event.data.object.billing_reason.includes('subscription')) {
+                    sendToDB(
+                        event.id,
+                        event.data.object.id,
+                        event.type,
+                        createDateTimeString(event.created),
+                        event.created,
+                    );
+                }
+                break;
+            default:
+            // console.log(`Unhandled event type ${event.type}`);
+        }
 
-//     try {
-//         event = stripe.webhooks.constructEvent(request.rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
+        // Return a response to acknowledge receipt of the event
+        response.json({ received: true });
+    } catch (err) {
+        response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+});
 
-//         // https://stripe.com/docs/billing/subscriptions/overview#subscription-events
-//         // Handle the event
-//         switch (event.type) {
-//             //any changes to subscription such as upgrading or donwgrading to another plan
-//             case 'customer.subscription.updated':
-//                 sendToDB(
-//                     event.id,
-//                     event.data.object.id,
-//                     event.type,
-//                     createDateTimeString(event.created),
-//                     event.created,
-//                 );
-//                 break;
-//             //if customer cancels subscription
-//             case 'customer.subscription.deleted':
-//                 sendToDB(
-//                     event.id,
-//                     event.data.object.id,
-//                     event.type,
-//                     createDateTimeString(event.created),
-//                     event.created,
-//                 );
-//                 break;
-//             //occurs during successful charges
-//             case 'invoice.paid':
-//                 if (event.data.object.billing_reason.includes('subscription')) {
-//                     sendToDB(
-//                         event.id,
-//                         event.data.object.id,
-//                         event.type,
-//                         createDateTimeString(event.created),
-//                         event.created,
-//                     );
-//                 }
-//                 break;
-//             //occurs during failed charges
-//             case 'invoice.payment_failed':
-//                 if (event.data.object.billing_reason.includes('subscription')) {
-//                     sendToDB(
-//                         event.id,
-//                         event.data.object.id,
-//                         event.type,
-//                         createDateTimeString(event.created),
-//                         event.created,
-//                     );
-//                 }
-//                 break;
-//             default:
-//             //console.log(`Unhandled event type ${event.type}`);
-//         }
+async function sendToDB(eventid, id, type, datetime, timestamp) {
+    var obj = {
+        eventid: eventid,
+        id: id,
+        type: type,
+        createdAt: datetime,
+        timestamp: timestamp,
+    };
+    //console.log(obj);
 
-//         // Return a response to acknowledge receipt of the event
-//         response.json({ received: true });
-//     } catch (err) {
-//         response.status(400).send(`Webhook Error: ${err.message}`);
-//     }
-// });
+    var oneRow = db.collection('users').doc(obj.id);
 
-// function sendToDB(eventid, id, type, datetime, timestamp) {
-//     var obj = {
-//         eventid: eventid,
-//         id: id,
-//         type: type,
-//         createdAt: datetime,
-//         timestamp: timestamp,
-//     };
+    await oneRow
+        .set(obj)
+        .then(console.log(`object added!`))
+        .catch((err) => {
+            console.log(`adding failed`, err);
+        });
+}
 
-//     var oneRow = database.ref('csc-assignment-2').child(obj.id);
+async function sendToDBAgain(eventid, id, type, datetime, timestamp) {
+    var obj = {
+        eventid: eventid,
+        id: id,
+        type: type,
+        createdAt: datetime,
+        timestamp: timestamp,
+    };
+    //console.log(obj);
 
-//     oneRow.update(obj, (error) => {
-//         if (error) {
-//             // The write failed...
-//             console.log('Failed with error: ' + error);
-//         } else {
-//             // The write was successful...
-//             console.log('success');
-//         }
-//     });
-// }
+    var oneRow = db.collection('users').doc(obj.id);
 
-// function createDateTimeString(timestamp) {
-//     var date = new Date(timestamp * 1000);
-//     var datetimeString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-//     return datetimeString;
-// }
+    await oneRow
+        .update(obj)
+        .then(console.log(`object added!`))
+        .catch((err) => {
+            console.log(`adding failed`, err);
+        });
+}
+
+function createDateTimeString(timestamp) {
+    var date = new Date(timestamp * 1000);
+    var datetimeString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    return datetimeString;
+}
 
 // App configs
 const server = http.createServer(app);
