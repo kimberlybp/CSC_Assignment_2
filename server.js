@@ -1,7 +1,27 @@
 const http = require('http');
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
+
 const app = express();
+app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
+
+// Firebase config
+const firebase = require('firebase');
+let firebaseConfig = {
+    apiKey: 'AIzaSyA_xy5TEEWiZZegx_zMV6l80vvp9TVEh5U',
+    authDomain: 'csc-assignment-2-436b4.firebaseapp.com',
+    projectId: 'csc-assignment-2-436b4',
+    storageBucket: 'csc-assignment-2-436b4.appspot.com',
+    messagingSenderId: '1079222292828',
+    appId: '1:1079222292828:web:134e6b9b77b5fa9321f199',
+};
+firebase.initializeApp(firebaseConfig);
+let database = firebase.database();
+//
 
 const envFilePath = path.resolve(__dirname, './.env');
 const env = require('dotenv').config({ path: envFilePath });
@@ -95,6 +115,11 @@ app.get('/setup', (req, res) => {
     });
 });
 
+app.post('/student', (req, res) => {
+    username = req.body.name;
+    email = req.body.email;
+});
+
 // listens to webhook
 // app.post('/webhook', bodyParser.raw({ type: '*/*' }), (request, response) => {
 //     let event;
@@ -171,7 +196,7 @@ app.get('/setup', (req, res) => {
 //         timestamp: timestamp,
 //     };
 
-//     var oneRow = database.ref('subscription-log').child(obj.id);
+//     var oneRow = database.ref('csc-assignment-2').child(obj.id);
 
 //     oneRow.update(obj, (error) => {
 //         if (error) {
