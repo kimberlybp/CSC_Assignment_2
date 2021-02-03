@@ -1,0 +1,120 @@
+<h2 class="p-3 mb-2 bg-dark text-white" id="Commentstitle"></h2>
+
+
+
+<div class="row">
+    <div class="card">
+        <h2>POST TITLE</h2>
+        <!-- <div class="fakeimg" style="height:200px;">Image</div> -->
+        <p>First name:</p>
+        <p>Last name: </p>
+        <p>Gender: </p>
+        <p>Age: </p>
+        <p>
+            Interests:
+            <ul>
+            </ul>
+        </p>
+        
+      </div>
+    <div class="col-12">
+        <div id="commentsContainer"></div>
+    </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery-comments.js"></script>
+    <script>
+
+        //this method is to get the customerAccountId from the url
+        const currentCustomerId = getIdFromAddressBar();
+        function getIdFromAddressBar() {
+            //Get Id from the url string in the browser's address bar
+            let urlArray = window.location.href.split('/');
+            let id = urlArray[urlArray.length - 1];
+            return id;
+        }
+
+
+        //displays comments
+        (function () {
+            $('#commentsContainer').comments({
+                textareaPlaceholderText: 'Leave a comment',
+                enableEditing: true,
+                enableUpvoting: false,
+                enableDeleting: true,
+                enableDeletingCommentWithReplies: false,
+                enableAttachments: false,
+                enableHashtags: false,
+                enablePinging: false,
+                postCommentOnEnter: false,
+                forceResponsive: true,
+                readOnly: false,
+                getComments: function (success, error) {
+                    let data = [{ "id": 6, "parent": null, "content": "Miss Sanya is the main contact person for getting signature after the service training session has ended.\r\nNote that the training service commences in August. We need to confirm the timetable by August.", "fullname": "You", "modified": "2019-06-07T10:30:00", "created": "2019-06-07T10:30:00", "creator": "JULIET", "createdByCurrentUser": true }, { "id": 7, "parent": null, "content": "Miss Sanya has made an email reply on 10th June 2019, Monday stating that Gem Kid SchoolHouse has agreed on weekly lessons 10AM to 12PM for Monday and Friday.\r\nIf Nancy agrees with that timetable, I will assign her to this customer and create the timetable records.", "fullname": "You", "modified": "2019-06-10T10:30:00", "created": "2019-06-10T10:30:00", "creator": "JULIET", "createdByCurrentUser": true }, { "id": 8, "parent": 7, "content": "I recall Nancy might be giving training to another customer in August on Monday 9AM to 11AM. There might be a clash. Can you check on this?", "fullname": "KENNY", "modified": "2019-06-10T14:30:00", "created": "2019-06-10T14:30:00", "creator": "KENNY", "createdByCurrentUser": false }];
+                         success(data);
+                    //get method to retrieve all the customer
+                    // $.ajax({
+                    //     url: '/API/commentsmanager/GetCommentsByCustomerId/' + currentCustomerId,
+                    //     method: 'GET'
+                    // }).done(function (data) {
+
+                    //     //display the Customer account name
+                    //     console.log(data.customerAccountName);
+                    //     var titleinput = "Comments for " + data.customerAccountName;
+                    //     $('#Commentstitle').text(titleinput);
+
+                    //     console.log(data);
+
+                    //     //provide the data requied to display the comments
+                    //     success(data.records);
+
+                    // });
+                    // error: error
+                },
+                postComment: function (commentJSON, success, error) {
+                    console.dir(commentJSON);
+
+                    //collect the data
+                    let collectedComment = commentJSON["content"];
+                    let collectedParentId = commentJSON["parent"];
+
+                    function WebFormData(inComments, inParentId) {
+                        this.comment = inComments;
+                        this.parentId = inParentId;
+
+                    }
+
+                    let webFormData = new WebFormData(collectedComment, collectedParentId);
+                    console.dir(webFormData);
+
+                    //post method to create comments in the database
+                    $.ajax({
+                        url: '/API/commentsmanager/CreateComment/' + currentCustomerId,
+                        method: 'POST',
+                        data: webFormData
+                    }).done(function (data) {
+
+                        //display new comment
+                        success(commentJSON)
+                        //$.ajax({
+                        //    url: '/API/commentsmanager/GetCommentsByComment/' + currentCustomerId,
+                        //    method: 'GET'
+                        //}).done(function (data) {
+
+                        //    commentJSON["id"] = data.records.id;
+                        //    console.dir(commentJSON)
+                        //    success(commentJSON)
+
+                        //})
+
+                    })
+                }
+            });
+
+
+        })()
+    </script>
