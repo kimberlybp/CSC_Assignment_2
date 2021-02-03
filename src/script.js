@@ -50,16 +50,28 @@ fetch('/setup')
     .then(function () {
         var publishableKey =
             'pk_test_51Hx6udF6nia1fA2P8wOMf1eodbJIt7gYStqUoDYJQjeTB97PPXmNPRjAHNkUyIot3x10XPIvWfNmbRg7ysMuusZV008fphPWNk';
-        var subscriptionPriceId = 'price_1ICnFzF6nia1fA2PrjjPHyEA';
-        var customerId = 'cus_IfjppW291BfofB'; // Need a dynamic cus id
+        var freePriceId = 'price_1IGghbF6nia1fA2PSKqoUN9n';
+        var paidPriceId = 'price_1ICnFzF6nia1fA2PrjjPHyEA';
+        var customerId = 'cus_IsSUtl1SoibEnx'; // Need a dynamic cus id
         // var customerEmail = 'abc.com';
 
         var stripe = Stripe(publishableKey);
 
         // Setup event handler to create a Checkout Session when button is clicked
-        document.getElementById('subscription-plan-btn').addEventListener('click', function (evt) {
+        document.getElementById('free-plan-btn').addEventListener('click', function (evt) {
             document.getElementById('loading-overlay').style.display = 'block';
-            createCheckoutSession(subscriptionPriceId, customerId).then(function (data) {
+            createCheckoutSession(freePriceId, customerId).then(function (data) {
+                // Call Stripe.js method to redirect to the new Checkout page
+                stripe
+                    .redirectToCheckout({
+                        sessionId: data.sessionId,
+                    })
+                    .then(handleResult);
+            });
+        });
+        document.getElementById('paid-plan-btn').addEventListener('click', function (evt) {
+            document.getElementById('loading-overlay').style.display = 'block';
+            createCheckoutSession(paidPriceId, customerId).then(function (data) {
                 // Call Stripe.js method to redirect to the new Checkout page
                 stripe
                     .redirectToCheckout({
@@ -86,7 +98,7 @@ fetch('/setup')
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    customerId: 'cus_IfjppW291BfofB', // Need a dynamic cus id
+                    customerId: 'cus_IsSUtl1SoibEnx', // Need a dynamic cus id
                 }),
             })
                 .then((response) => response.json())

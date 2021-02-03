@@ -64,7 +64,7 @@ app.post('/create-checkout-session', async (req, res) => {
 
     try {
         const session = await stripe.checkout.sessions.create({
-            customer: 'cus_IfjppW291BfofB',
+            customer: 'cus_IsSUtl1SoibEnx',
             mode: 'subscription',
             payment_method_types: ['card'],
             line_items: [
@@ -107,34 +107,33 @@ app.post('/customer-portal-byId', async (req, res) => {
 app.get('/setup', (req, res) => {
     res.send({
         publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+        freePrice: process.env.FREE_PRICE_ID,
         proPrice: process.env.PREMIUM_PRICE_ID,
     });
 });
 
-app.post('/student', async (req, res) => {
-    username = req.body.name;
-    // email = req.body.email;
+// app.post('/student', async (req, res) => {
+//     username = req.body.name;
+//     // email = req.body.email;
 
-    const docRef = db.collection('users').doc(username);
-    await docRef
-        .set({
-            gender: 'male',
-            FIN: '12345',
-            hobby: 'sleep',
-        })
-        .then(console.log(`user added!`))
-        .catch((err) => {
-            console.log(`adding failed`, err);
-        });
-});
+//     const docRef = db.collection('users').doc(username);
+//     await docRef
+//         .set({
+//             gender: 'male',
+//             FIN: '12345',
+//             hobby: 'sleep',
+//         })
+//         .then(console.log(`user added!`))
+//         .catch((err) => {
+//             console.log(`adding failed`, err);
+//         });
+// });
 
 // listens to webhook
 app.post('/webhook', (request, response) => {
     const event = request.body;
 
     try {
-        // https://stripe.com/docs/billing/subscriptions/overview#subscription-events
-        // Handle the event
         switch (event.type) {
             case 'customer.subscription.created':
                 sendToDB(
@@ -143,6 +142,7 @@ app.post('/webhook', (request, response) => {
                     event.type,
                     createDateTimeString(event.created),
                     event.created,
+                    event.data.object.plan.product,
                 );
                 break;
             //any changes to subscription such as upgrading or donwgrading to another plan
@@ -153,6 +153,7 @@ app.post('/webhook', (request, response) => {
                     event.type,
                     createDateTimeString(event.created),
                     event.created,
+                    event.data.object.plan.product,
                 );
                 break;
             //if customer cancels subscription
@@ -163,32 +164,10 @@ app.post('/webhook', (request, response) => {
                     event.type,
                     createDateTimeString(event.created),
                     event.created,
+                    event.data.object.plan.product,
                 );
                 break;
-            //occurs during successful charges
-            case 'invoice.finalized':
-                //               if (event.data.object.billing_reason.includes('subscription')) {
-                sendToDB(
-                    event.id,
-                    event.data.object.id,
-                    event.type,
-                    createDateTimeString(event.created),
-                    event.created,
-                );
-                //             }
-                break;
-            //occurs during failed charges
-            case 'invoice.payment_failed':
-                if (event.data.object.billing_reason.includes('subscription')) {
-                    sendToDB(
-                        event.id,
-                        event.data.object.id,
-                        event.type,
-                        createDateTimeString(event.created),
-                        event.created,
-                    );
-                }
-                break;
+
             default:
             // console.log(`Unhandled event type ${event.type}`);
         }
@@ -200,17 +179,18 @@ app.post('/webhook', (request, response) => {
     }
 });
 
-async function sendToDB(eventid, id, type, datetime, timestamp) {
+async function sendToDB(eventid, id, type, datetime, timestamp, product) {
     var obj = {
         eventid: eventid,
         id: id,
         type: type,
         createdAt: datetime,
         timestamp: timestamp,
+        product: product,
     };
     //console.log(obj);
 
-    var oneRow = db.collection('users').doc(obj.id);
+    var oneRow = db.collection('subscription-log').doc(obj.id);
 
     await oneRow
         .set(obj)
@@ -220,17 +200,18 @@ async function sendToDB(eventid, id, type, datetime, timestamp) {
         });
 }
 
-async function sendToDBAgain(eventid, id, type, datetime, timestamp) {
+async function sendToDBAgain(eventid, id, type, datetime, timestamp, product) {
     var obj = {
         eventid: eventid,
         id: id,
         type: type,
         createdAt: datetime,
         timestamp: timestamp,
+        product: product,
     };
     //console.log(obj);
 
-    var oneRow = db.collection('users').doc(obj.id);
+    var oneRow = db.collection('subscription-log').doc(obj.id);
 
     await oneRow
         .update(obj)
