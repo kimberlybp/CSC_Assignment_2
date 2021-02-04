@@ -21,7 +21,6 @@ function talentDetails(con){
 
             con.connect(function (err) {
                 con.query(`select * from main.Talents where TalentId = ${req.query.TalentId}`, function (err, result, fields) {
-
                     if (err) res.status(500).json({ code: 500, err });
                     if (result) res.status(200).json({ code: 200, result });
                     if (fields) console.log(fields);

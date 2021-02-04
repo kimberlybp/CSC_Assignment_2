@@ -23,6 +23,11 @@ app.get('/', function (req, res) {
     res.sendFile(filePath);
 });
 
+app.get('/', function (req, res) {
+  const filePath = path.resolve(__dirname + "/src/TalentDetails.html");
+  res.sendFile(filePath);
+});
+
 
 require('./routes')(app);
 

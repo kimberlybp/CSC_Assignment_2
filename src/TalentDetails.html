@@ -54,26 +54,25 @@
                 forceResponsive: true,
                 readOnly: false,
                 getComments: function (success, error) {
-                    let data = [{ "id": 6, "parent": null, "content": "Miss Sanya is the main contact person for getting signature after the service training session has ended.\r\nNote that the training service commences in August. We need to confirm the timetable by August.", "fullname": "You", "modified": "2019-06-07T10:30:00", "created": "2019-06-07T10:30:00", "creator": "JULIET", "createdByCurrentUser": true }, { "id": 7, "parent": null, "content": "Miss Sanya has made an email reply on 10th June 2019, Monday stating that Gem Kid SchoolHouse has agreed on weekly lessons 10AM to 12PM for Monday and Friday.\r\nIf Nancy agrees with that timetable, I will assign her to this customer and create the timetable records.", "fullname": "You", "modified": "2019-06-10T10:30:00", "created": "2019-06-10T10:30:00", "creator": "JULIET", "createdByCurrentUser": true }, { "id": 8, "parent": 7, "content": "I recall Nancy might be giving training to another customer in August on Monday 9AM to 11AM. There might be a clash. Can you check on this?", "fullname": "KENNY", "modified": "2019-06-10T14:30:00", "created": "2019-06-10T14:30:00", "creator": "KENNY", "createdByCurrentUser": false }];
-                         success(data);
-                    //get method to retrieve all the customer
-                    // $.ajax({
-                    //     url: '/API/commentsmanager/GetCommentsByCustomerId/' + currentCustomerId,
-                    //     method: 'GET'
-                    // }).done(function (data) {
+                    // let data = [{ "id": 6, "parent": null, "content": "Miss Sanya is the main contact person for getting signature after the service training session has ended.\r\nNote that the training service commences in August. We need to confirm the timetable by August.", "fullname": "You", "modified": "2019-06-07T10:30:00", "created": "2019-06-07T10:30:00", "creator": "JULIET", "createdByCurrentUser": true }, { "id": 7, "parent": null, "content": "Miss Sanya has made an email reply on 10th June 2019, Monday stating that Gem Kid SchoolHouse has agreed on weekly lessons 10AM to 12PM for Monday and Friday.\r\nIf Nancy agrees with that timetable, I will assign her to this customer and create the timetable records.", "fullname": "You", "modified": "2019-06-10T10:30:00", "created": "2019-06-10T10:30:00", "creator": "JULIET", "createdByCurrentUser": true }, { "id": 8, "parent": 7, "content": "I recall Nancy might be giving training to another customer in August on Monday 9AM to 11AM. There might be a clash. Can you check on this?", "fullname": "KENNY", "modified": "2019-06-10T14:30:00", "created": "2019-06-10T14:30:00", "creator": "KENNY", "createdByCurrentUser": false }];
+                    //      success(data);
 
-                    //     //display the Customer account name
-                    //     console.log(data.customerAccountName);
-                    //     var titleinput = "Comments for " + data.customerAccountName;
-                    //     $('#Commentstitle').text(titleinput);
 
-                    //     console.log(data);
+                    axios.get('/api/comments/getByTalentId', {
+                        params:
+                        {
+                            TalentId: 1,
+                        }
+                    }).then(function (res) {
+                        
+                        success(res);
 
-                    //     //provide the data requied to display the comments
-                    //     success(data.records);
+                    }).catch(function (error) {
+                        error: error;
+                    });
 
-                    // });
-                    // error: error
+                    
+                    
                 },
                 postComment: function (commentJSON, success, error) {
                     console.dir(commentJSON);
