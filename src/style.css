@@ -157,11 +157,11 @@ section {
     display: flex;
 }
 
-.flash-comments .comment-info .name {
+.flash-comments .comment-info .fname {
     color: #000;
 }
 
-.flash-comments .comment-info .email {
+.flash-comments .comment-info .lname {
     color: #aeaeae;
     margin-left: 10px;
 }
