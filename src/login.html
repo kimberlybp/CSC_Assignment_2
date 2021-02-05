@@ -8,10 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
     <!-- Site Properties -->
-    <title>Login Example - Semantic</title>
+    <title>TLTT</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.css">
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
+    <script src="./js/initFirebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.js"></script>
 
     <style type="text/css">
@@ -35,51 +38,15 @@
             background-color: #B3D1E8;
         }
     </style>
-    <script>
-        $(document)
-            .ready(function () {
-                $('.ui.form')
-                    .form({
-                        fields: {
-                            email: {
-                                identifier: 'email',
-                                rules: [
-                                    {
-                                        type: 'empty',
-                                        prompt: 'Please enter your e-mail'
-                                    },
-                                    {
-                                        type: 'email',
-                                        prompt: 'Please enter a valid e-mail'
-                                    }
-                                ]
-                            },
-                            password: {
-                                identifier: 'password',
-                                rules: [
-                                    {
-                                        type: 'empty',
-                                        prompt: 'Please enter your password'
-                                    },
-                                    {
-                                        type: 'length[6]',
-                                        prompt: 'Your password must be at least 6 characters'
-                                    }
-                                ]
-                            }
-                        }
-                    })
-                    ;
-            })
-            ;
-    </script>
+
+    <script src="js/login.js"></script>
 </head>
 
 <body>
 
     <div class="ui centered grid">
         <div class="seven wide column">
-            <form class="ui large form" style="height: 100%">
+            <form class="ui large login form" style="height: 100%">
                 <div class="ui segment" style="height: 100%;
                 display: flex;
                 align-items: center;">
@@ -91,21 +58,23 @@
                             </div>
                         </h1>
                         <div class="field">
+                            <label>Email</label>
                             <div class="ui left icon input">
                                 <i class="user icon"></i>
-                                <input type="text" name="email" placeholder="E-mail address">
+                                <input type="text" name="email" placeholder="name@example.com">
                             </div>
                         </div>
                         <div class="field">
+                            <label>Password</label>
                             <div class="ui left icon input">
                                 <i class="lock icon"></i>
-                                <input type="password" name="password" placeholder="Password">
+                                <input type="password" name="password" placeholder="at least 8 characters">
                             </div>
                         </div>
 
                         <div class=" ui fluid large submit blue button">Login</div>
                         <div style="text-align: center; margin-top: 20px;">
-                            <p style="margin: 0;">Don't have an account? <a href="#">Sign Up</a></p>
+                            <p style="margin: 0;">Don't have an account? <a href="signUp">Sign Up</a></p>
                             <a href="#">Forgot Password?</a>
                         </div>
                         <div class="ui error message"></div>
