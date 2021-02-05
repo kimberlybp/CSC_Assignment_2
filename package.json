@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/kimberlybp/CSC_Assignment_2#readme",
   "dependencies": {
+    "aws-sdk": "^2.834.0",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase": "^8.2.5",
     "joi": "^17.3.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7"
