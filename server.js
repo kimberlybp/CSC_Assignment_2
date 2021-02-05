@@ -14,8 +14,8 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.static(process.env.STATIC_DIR));
 
 // Body Parser Middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '50mb'}));
 
 // default URL for website
 app.get('/', function (req, res) {
@@ -25,6 +25,21 @@ app.get('/', function (req, res) {
 
 app.get('/login', function (req, res) {
   const filePath = path.resolve(__dirname + "/src/login.html");
+  res.sendFile(filePath);
+});
+
+app.get('/signup', function (req, res) {
+  const filePath = path.resolve(__dirname + "/src/signUp.html");
+  res.sendFile(filePath);
+});
+
+app.get('/signup/setUpProfile', function (req, res) {
+  const filePath = path.resolve(__dirname + "/src/setUpProfile.html");
+  res.sendFile(filePath);
+});
+
+app.get('/home', function (req, res) {
+  const filePath = path.resolve(__dirname + "/src/home.html");
   res.sendFile(filePath);
 });
 
