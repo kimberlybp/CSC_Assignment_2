@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 
 const envFilePath = path.resolve(__dirname, './.env');
@@ -15,12 +16,18 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.static(process.env.STATIC_DIR));
 
 // Body Parser Middleware
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // default URL for website
 app.get('/', function (req, res) {
     const filePath = path.resolve(__dirname + '/src/index.html');
+    res.sendFile(filePath);
+});
+
+app.get('/test', function (req, res) {
+    const filePath = path.resolve(__dirname + '/src/test.html');
     res.sendFile(filePath);
 });
 
@@ -64,6 +71,32 @@ app.get('/search', function (req, res) {
             .catch((err) => res.status(400).send(`Error executing search: ${err}`));
     } else res.status(400).send(`Please provide a query string.`);
 });
+
+// pusher-test
+const Pusher = require('pusher');
+
+const pusher = new Pusher({
+    appId: '1150987',
+    key: '3a44ea21cd9b397e8910',
+    secret: '7de03a2b7535fdd9bf7b',
+    cluster: 'ap1',
+    useTLS: true,
+});
+
+app.post('/comment', function (req, res) {
+    console.log(req.body);
+    var newComment = {
+        fname: req.body.fname,
+        lname: req.body.lname,
+        comment: req.body.comment,
+    };
+    pusher.trigger('flash-comments', 'new_comment', newComment);
+    res.json({ created: true });
+});
+
+// pusher.trigger('my-channel', 'my-event', {
+//     message: 'hello world',
+// });
 
 require('./routes')(app);
 

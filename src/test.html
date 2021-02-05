@@ -1,0 +1,84 @@
+<!DOCTYPE >
+<html>
+    <head>
+        <title>CSC Assignment 2</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200" />
+        <link rel="stylesheet" href="./style.css" />
+        <!-- You MUST include jQuery before Fomantic -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script>
+    </head>
+    <body>
+        <section>
+            <div class="ui placeholder segment">
+                <div class="ui icon header">
+                    <i class="pdf file outline icon"></i>
+                    No documents are listed for this customer.
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="flash-comments">
+                <div class="header">
+                    <div><img src="./assets/comments.png" /></div>
+                    <div class="text">Comment Section</div>
+                </div>
+                <form class="pure-form" id="comment-form">
+                    <div class="comment-form">
+                        <div class="left-side">
+                            <div class="row ui input">
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="Have dynamic fname here"
+                                    id="new_comment_fname"
+                                />
+                                <input
+                                    placeholder="Have dynamic lname here"
+                                    required
+                                    type="text"
+                                    id="new_comment_lname"
+                                />
+                            </div>
+                            <div class="row ui input">
+                                <textarea
+                                    placeholder="enter comment text"
+                                    required
+                                    id="new_comment_text"
+                                    rows="3"
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="right-side">
+                            <button type="submit" class="ui primary button">Send Comment</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="comments-list" id="comments-list">
+                    <script id="comment-template" type="text/x-template">
+                        <div class="user-icon">
+                            <img src="./assets/user.png" />
+                        </div>
+                        <div class="comment-info">
+                            <div class="row">
+                                <div class="name">{{fname}}</div>
+                                <div class="email">{{lname}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="text">{{comment}}</div>
+                            </div>
+                        </div>
+                    </script>
+                </div>
+            </div>
+        </section>
+
+        <script type="text/javascript" src="https://js.pusher.com/3.2/pusher.min.js"></script>
+        <script type="text/javascript" src="./scripts.js"></script>
+    </body>
+</html>
