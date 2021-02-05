@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const dbService = require('./connect.js');
 const app = express();
 
 const envFilePath = path.resolve(__dirname, './.env');
@@ -84,12 +85,17 @@ const pusher = new Pusher({
 });
 
 app.post('/comment', function (req, res) {
-    console.log(req.body);
+    const db = dbService.getDbServiceInstance();
+    //console.log(req.body);
     var newComment = {
-        fname: req.body.fname,
-        lname: req.body.lname,
+        fname: req.body.name,
+        lname: req.body.email,
         comment: req.body.comment,
     };
+    const result = db.postComment(newComment.fname, newComment.lname, newComment.comment);
+    result
+        .then(res.send('Comment stored in database!'))
+        .catch((err) => res.status(400).send(`Error adding comment: ${err}`));
     pusher.trigger('flash-comments', 'new_comment', newComment);
     res.json({ created: true });
 });

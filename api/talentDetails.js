@@ -46,4 +46,10 @@ function talentDetails(con) {
     };
 }
 
+// function createDateTimeString(timestamp) {
+//     var date = new Date(timestamp * 1000);
+//     var datetimeString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+//     return datetimeString;
+// }
+
 module.exports = talentDetails;
