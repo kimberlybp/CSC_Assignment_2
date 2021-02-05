@@ -44,7 +44,7 @@ const index = client.initIndex('talents');
 // index.saveObjects(objects).then(({ objectIDs }) => {
 //     console.log(objectIDs);
 // });
-app.post('/search', function (req, res) {
+app.get('/search', function (req, res) {
     let array = [];
     let query = req.body.query;
     index
