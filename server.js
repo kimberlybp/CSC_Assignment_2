@@ -2,13 +2,11 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json());
 
 // Firebase config
 const admin = require('firebase-admin');
@@ -29,8 +27,6 @@ if (env.error) {
 }
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-app.use(express.json({ limit: '50mb' }));
 app.use(express.static(process.env.STATIC_DIR));
 
 // Body Parser Middleware
@@ -39,27 +35,27 @@ app.use(bodyParser.json({ limit: '50mb'}));
 
 // default URL for website
 app.get('/', function (req, res) {
-    const filePath = path.resolve(__dirname + '/src/index.html');
+    const filePath = path.resolve(__dirname + '/src/views/index.html');
     res.sendFile(filePath);
 });
 
 app.get('/login', function (req, res) {
-  const filePath = path.resolve(__dirname + "/src/login.html");
+  const filePath = path.resolve(__dirname + "/src/views/login.html");
   res.sendFile(filePath);
 });
 
 app.get('/signup', function (req, res) {
-  const filePath = path.resolve(__dirname + "/src/signUp.html");
+  const filePath = path.resolve(__dirname + "/src/views/signUp.html");
   res.sendFile(filePath);
 });
 
 app.get('/signup/setUpProfile', function (req, res) {
-  const filePath = path.resolve(__dirname + "/src/setUpProfile.html");
+  const filePath = path.resolve(__dirname + "/src/views/setUpProfile.html");
   res.sendFile(filePath);
 });
 
 app.get('/home', function (req, res) {
-  const filePath = path.resolve(__dirname + "/src/home.html");
+  const filePath = path.resolve(__dirname + "/src/views/home.html");
   res.sendFile(filePath);
 });
 
@@ -67,7 +63,7 @@ app.get('/home', function (req, res) {
 require('./routes')(app);
 
 app.get('/subscribe', function (req, res) {
-    const filePath = path.resolve(__dirname + '/src/subscribe.html');
+    const filePath = path.resolve(__dirname + '/src/views/subscribe.html');
     res.sendFile(filePath);
 });
 

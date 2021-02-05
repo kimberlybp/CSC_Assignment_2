@@ -6,11 +6,11 @@
         <meta name="description" content="A demo of Stripe Payment Intents" />
 
         <link rel="stylesheet" href="css/normalize.css" />
-        <link rel="stylesheet" href="css/global.css" />
+        <link rel="stylesheet" href="css/subscribe.css" />
         <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
         <!-- Load Stripe.js on your website. -->
         <script src="https://js.stripe.com/v3/"></script>
-        <script src="./script.js" defer></script>
+        <script src="./js/subscribe.js" defer></script>
     </head>
 
     <body>
@@ -33,14 +33,14 @@
 
                 <div class="price-table-container" style="margin-bottom: 100px; display: flex; justify-content: center">
                     <section>
-                        <img src="/img/starter.png" width="120" height="120" />
+                        <img src="/assets/starter.png" width="120" height="120" />
                         <div class="name">Free</div>
                         <div class="price">$0</div>
                         <div class="duration">FOC</div>
                         <button id="free-plan-btn">Select</button>
                     </section>
                     <section>
-                        <img src="/img/premium.png" width="120" height="120" />
+                        <img src="/assets/premium.png" width="120" height="120" />
                         <div class="name">VIP plan</div>
                         <div class="price">$50</div>
                         <div class="duration">per month</div>
