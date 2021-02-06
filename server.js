@@ -50,7 +50,7 @@ app.get('/setUpPlan', function (req, res) {
   });
 
 app.get('/home', function (req, res) {
-  const filePath = path.resolve(__dirname + "/src/views/home.html");
+  const filePath = path.resolve(__dirname + "/src/views/index.html");
   res.sendFile(filePath);
 });
 
@@ -65,53 +65,6 @@ require('./routes')(app);
 app.get('/subscribe', function (req, res) {
     const filePath = path.resolve(__dirname + '/src/views/subscribe.html');
     res.sendFile(filePath);
-});
-
-app.post('/customer-portal', async (req, res) => {
-    const session = await stripe.billingPortal.sessions.create({
-        customer: '',
-        return_url: 'http://localhost:3000/index.html',
-    });
-    sessionURL = session.url;
-    res.redirect(session.url);
-});
-
-app.get('/checkout-session', async (req, res) => {
-    const { sessionId } = req.query;
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    res.send(session);
-});
-
-app.post('/create-checkout-session', async (req, res) => {
-    const domainURL = process.env.DOMAIN;
-    const { priceId } = req.body;
-
-    try {
-        const session = await stripe.checkout.sessions.create({
-            mode: 'subscription',
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price: priceId,
-                    quantity: 1,
-                },
-            ],
-            // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-            success_url: `${domainURL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${domainURL}/canceled.html`,
-        });
-
-        res.send({
-            sessionId: session.id,
-        });
-    } catch (e) {
-        res.status(400);
-        return res.send({
-            error: {
-                message: e.message,
-            },
-        });
-    }
 });
 
 app.post('/customer-portal-byId', async (req, res) => {

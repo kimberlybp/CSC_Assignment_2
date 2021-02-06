@@ -37,7 +37,7 @@ $(document)
                         .then((userCredential) => {
                             // Signed in
                             var user = userCredential.user;
-                            window.location.href = 'home';
+                            window.location.href = '/';
                         })
                         .catch((error) => {
                             var errorCode = error.code;

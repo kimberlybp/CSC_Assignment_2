@@ -33,5 +33,6 @@ const postUserSubscriptionPlanSchema = Joi.object({
 
 module.exports = {
     postTalentProfilePictureSchema: postTalentProfilePictureSchema,
-    postUserSubscriptionPlanSchema: postUserSubscriptionPlanSchema
+    postUserSubscriptionPlanSchema: postUserSubscriptionPlanSchema,
+    firebaseUidSchema: firebaseUidSchema
 }

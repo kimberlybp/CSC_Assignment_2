@@ -19,7 +19,8 @@ function routes(app) {
     app.post('/api/postTalentDetails',talentDetails.post);
     app.post('/api/postTalentWithFirebase', talentDetails.postWithFirebase);
     app.post('/api/postTalentProfilePicture', talentDetails.postProfilePicture);
-    app.post('/api/postUserSubscriptionPlan', talentDetails.postUserSubscriptionPlan)
+    app.post('/api/postUserSubscriptionPlan', talentDetails.postUserSubscriptionPlan);
+    app.get('/api/getTalentDetailsByFirebase', talentDetails.getTalentDetailsByFirebase);
     app.get('/api/getAllPlans', plans.getAll);
     app.post('/api/createFreeCheckoutSession', stripeApi.createFreeCheckoutSession);
     app.post('/api/createPaidCheckoutSession', stripeApi.createPaidCheckoutSession);

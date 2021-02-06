@@ -111,12 +111,10 @@ function talentDetails(con, s3, firestore) {
     }
 
     function getTalentDetailsByFirebase(req, res){
+        const { error, value } = joiValidation.firebaseUidSchema.validate(req.query);
+        if(!error){
         con.connect(function (err) {
-            var desc = req.body.Description ? req.body.Description : null;
-            var gender = req.body.Gender ? req.body.Gender : null;
-            var age = req.body.Age ? req.body.Age : null;
-            var profilePic = req.body.ProfilePic ? req.body.ProfilePic : null;
-            con.query(`INSERT INTO main.Talents (FirstName, LastName, Description, Gender, Age, ProfilePic, FirebaseUid) VALUES ('${req.body.FirstName}', '${req.body.LastName}', '${desc}', '${gender}', '${age}', '${profilePic}','${req.body.FirebaseUid}')`, function (err, result, fields) {
+            con.query(`SELECT * FROM main.Talents where FirebaseUid='${req.query.FirebaseUid}'`, function (err, result, fields) {
                 if (err) {
                     console.log(err);
                     res.status(500).json({ code: 500, err });
@@ -125,6 +123,9 @@ function talentDetails(con, s3, firestore) {
                 if (result) res.status(200).json({ code: 200, result });
             });
         });
+    }else{
+        res.status(400).json({ code: 400, message: error });
+    }
     }
 
 
@@ -133,6 +134,7 @@ function talentDetails(con, s3, firestore) {
         postWithFirebase: postTalentDetailsWithFirebase,
         postProfilePicture: postTalentProfilePicture,
         postUserSubscriptionPlan: postUserSubscriptionPlan,
+        getTalentDetailsByFirebase: getTalentDetailsByFirebase
     }
 
 }
