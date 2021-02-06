@@ -1,51 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <link rel="stylesheet" href="css/home.css"> -->
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+        <!-- You MUST include jQuery before Fomantic -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="css/home.css"> -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-</head>
-
-<body>
-    <div class="w3-container" id="userMenu">
-        <h2>List of users</h2>
-        <ul class="w3-ul w3-card-4"  id="talentsList">
-            
-        </ul>
-    </div>
-</body>
-
+    <body>
+        <div class="w3-container" id="userMenu">
+            <div style="display: flex; justify-content: space-between">
+                <h2>List of users</h2>
+                <div class="ui left icon input">
+                    <input type="text" id="search" placeholder="Search users..." />
+                    <i class="users icon"></i>
+                </div>
+            </div>
+            <div class="ui stacked segment">
+                <ul id="talentsList"></ul>
+            </div>
+        </div>
+    </body>
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    (function($,window){
-        loadData();
-        
-        function loadData(){
-            $.ajax({
-                type: "GET",
-                // dataType: "jsonp",
-                url: "https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail",
-                // crossDomain: true,
-                // headers: {
-                //     "accept" : "application/json",
-                //     "Access-Control-Allow-Origin":"*"
-                // },
-                success: function(data){
-                    for (var i = 0; i < data.length; i++) {
-                        // var id = window.localStorage.setItem('id', JSON.stringify(data.result[i].TalentId));
-                        // var id = localStorage.setItem("id", data[i].TalentId);
-                        console.log(data);
-                        var list = "<li>" + '<a href="/test.html?id=' + data[i].TalentId + '">' + data[i].FirstName + " " + data[i].LastName + "<br><br>" + data[i].Description + "</li>"
-                            // var list = "<li>" + '<a href="/TalentDetails.html?id=' + id + '">' + data.result[i].FirstName + " " + data.result[i].LastName + "<br><br>" + data.result[i].Description + "</li>"
-                        $("#talentsList").append(list);
-                    }
-                },
-                error: function(data){
+    (function ($, window) {
+        let arrayOfTalents = [];
+        let searchString = '';
 
-                }
-            });}
-    })($,window)
+        loadData();
+
+        // search
+        const field = document.getElementById('search');
+        field.addEventListener('keypress', function (event) {
+            searchString += event.key;
+            //console.log(searchString);
+            search(searchString);
+        });
+
+        function search(string) {
+            $('#talentsList').innerHTML = '';
+
+            arrayOfTalents.forEach((talent) => {
+                //talent.FirstName.toLowerCase().includes(string.toLowerCase());
+                console.log(talent);
+            });
+            //     .forEach((talent) => {
+            //         var list =
+            //             '<li>' +
+            //             '<a href="/test.html?id=' +
+            //             talent.TalentId +
+            //             '">' +
+            //             talent.FirstName +
+            //             ' ' +
+            //             talent.LastName +
+            //             '<br><br>' +
+            //             talent.Description +
+            //             '</li>';
+            //         arrayOfTalents.push(list);
+            //     });
+            // $('#talentsList').append(arrayOfTalents);
+        }
+
+        function loadData() {
+            $.ajax({
+                type: 'GET',
+                url: 'https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail',
+                success: function (data) {
+                    console.log(data);
+                    Object.values(data).forEach((element) => {
+                        console.log(element.FirstName);
+                        var list = `<div class="ui segment"><i class="user icon"></i><a href='/test.html?id=${element.TalentId}'>${element.FirstName} ${element.LastName}</a>
+                             <p>${element.Description}</p></div>`;
+                        arrayOfTalents.push(list);
+                    });
+                    if (arrayOfTalents.length <= 0) $('#talentsList').append('<h1>No record(s)</h1>');
+                    else $('#talentsList').append(arrayOfTalents);
+                },
+                error: function (data) {},
+            });
+        }
+    })($, window);
 </script>
