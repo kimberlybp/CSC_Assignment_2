@@ -3,19 +3,19 @@ let workflowId = null;
 let imageData = null;
 let isHuman = null;
 let profilePicUrl = null;
-let currentUser = null
+let currentUser = null;
 
 let app = new Clarifai.App({
     apiKey: clarifaiApiKey,
 });
 
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      console.log(user.email);
+        currentUser = user;
     } else {
-      console.log('no user');
+        window.location.href = 'signUp';
     }
-  });
+});
 
 $(document)
     .ready(function () {
@@ -77,8 +77,10 @@ $(document)
                                     ).then(function (res) {
                                         document.getElementById("profilePic-loading").style.display = "none";
                                         document.getElementById('profilePic-preview').src = e.target.result;
+                                        profilePicUrl = res.data.url;
                                         showSuccessMessage("Profile picture is human and successfully uploaded.");
                                     }).catch(function (error) {
+                                        document.getElementById("profilePic-loading").style.display = "none";
                                         showErrorMessage("We are having trouble uploading your profile picture. Please try again.");
                                     });
 
@@ -163,19 +165,25 @@ $(document)
                             {
                                 FirstName: fields.firstName,
                                 LastName: fields.lastName,
-                                // FirebaseUid: 
+                                FirebaseUid: currentUser.uid,
+                                Description: fields.description.replace(/(["'])/g, "\\$1"),
+                                Gender: fields.gender,
+                                Age: fields.age,
+                                ProfilePic: profilePicUrl
                             }
-                        ).then(function (res) {
-                            document.getElementById("profilePic-loading").style.display = "none";
-                            document.getElementById('profilePic-preview').src = e.target.result;
-                            showSuccessMessage("Profile picture is human and successfully uploaded.");
+                        ).then(async function (res) {
+                            await res;
+                            // document.getElementById("profilePic-loading").style.display = "none";
+                            // document.getElementById('profilePic-preview').src = e.target.result;
+                            // showSuccessMessage("Profile picture is human and successfully uploaded.");
+
+                            window.location.href = 'setUpPlan';
                         }).catch(function (error) {
                             showErrorMessage("We are having trouble uploading your profile picture. Please try again.");
                         });
                     } else {
                         $("html, body").animate({ scrollTop: 0 }, 500);
                     }
-                    console.log(fields);
                 }
             })
             ;

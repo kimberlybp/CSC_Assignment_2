@@ -8,16 +8,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Firebase config
-const admin = require('firebase-admin');
-const serviceAccount = require('./csc-assignment-2-436b4-firebase-adminsdk-mltrx-144eb9f622.json');
-admin.initializeApp(
-    //functions.config().firebase
-    { credential: admin.credential.cert(serviceAccount) },
-);
-const db = admin.firestore();
-//
-
 const envFilePath = path.resolve(__dirname, './.env');
 const env = require('dotenv').config({ path: envFilePath });
 if (env.error) {
@@ -49,15 +39,25 @@ app.get('/signup', function (req, res) {
   res.sendFile(filePath);
 });
 
-app.get('/signup/setUpProfile', function (req, res) {
+app.get('/setUpProfile', function (req, res) {
   const filePath = path.resolve(__dirname + "/src/views/setUpProfile.html");
   res.sendFile(filePath);
 });
+
+app.get('/setUpPlan', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/setUpPlan.html");
+    res.sendFile(filePath);
+  });
 
 app.get('/home', function (req, res) {
   const filePath = path.resolve(__dirname + "/src/views/home.html");
   res.sendFile(filePath);
 });
+
+app.get('/paymentSetupSuccess', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/paymentSetupSuccess.html");
+    res.sendFile(filePath);
+  });
 
 
 require('./routes')(app);
@@ -88,7 +88,6 @@ app.post('/create-checkout-session', async (req, res) => {
 
     try {
         const session = await stripe.checkout.sessions.create({
-            customer: 'cus_IsSUtl1SoibEnx',
             mode: 'subscription',
             payment_method_types: ['card'],
             line_items: [
@@ -136,22 +135,6 @@ app.get('/setup', (req, res) => {
     });
 });
 
-// app.post('/student', async (req, res) => {
-//     username = req.body.name;
-//     // email = req.body.email;
-
-//     const docRef = db.collection('users').doc(username);
-//     await docRef
-//         .set({
-//             gender: 'male',
-//             FIN: '12345',
-//             hobby: 'sleep',
-//         })
-//         .then(console.log(`user added!`))
-//         .catch((err) => {
-//             console.log(`adding failed`, err);
-//         });
-// });
 
 // listens to webhook
 app.post('/webhook', (request, response) => {

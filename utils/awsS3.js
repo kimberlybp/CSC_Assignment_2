@@ -2,9 +2,9 @@ const fs = require('fs');
 const AWS = require('aws-sdk');
 
 // Enter copied or downloaded access id and secret here
-const ID = 'ASIA2K6NZQWHSYN3I7OK';
-const SECRET = 'KchDohe2pr/E9UzZlKGKEYWSxba2shdCZ/x+/Oax';
-const sessionToken = 'FwoGZXIvYXdzEC0aDFEqMOP1TwMk56zwGSLOAYDgPt/I0Ad1XaLZCwpCgqe1tBeB7KgmGMBa9rahxn805wrO9mkZbLZfwAeCAxlHb1j8e4jpwu6mO2OibzxIFGAFlm3PqtvfNDAkkuD9YAUQWbBaKps0fFEzXUAep/ukr2fDhatKOAMdSytrsYNQKZYENMiRsiGlJG3ZqX2Ua5nSXUXvHVTm7wohlglfYPXvnBPZZsxCmDfxYo3VX0RsnZZmFvgk4M/Wsqm+dGLkwnzUYRNorkqRFgJHIfzTZOgeq2pJqxdXEl2UGWTpr3UGKIay74AGMi1PZkrMYr+Tzm6cFhejjYRa9h+8SU4kjiNqCwk1LX92q5euDWF+mKEcTcrRPKI=';
+const ID = 'ASIA2K6NZQWHRABKOBGA';
+const SECRET = 'xCTb0QvyVprvkAVOXy4Tcdp1S27/ywatPEhVVghR';
+const sessionToken = 'FwoGZXIvYXdzEF4aDOLRBQxnOmDneWatBSLOAc/6Sm/u7dgSXnE1ib2fhNSPQvTGI4/IOSUKQukNq36lBZfw0sVeediOba8uzcbgoyMj+jLFT9K6+pWBttSa7Zab57dAYQQ1x/dw0Jir0sRPqBLSGaMlQ5tlDlCRCJImmIEsSSGQA2SQIcEuMcdfgTCmJUMVst5uJ94TtKPy7A/xHnpCQx02SQ5nMlWNUWmMCIV/XQhJQtn+30c5tBL6mvmmrhXZsAv04JMEEDJJ3Xjby/rQ2DIQ7AyfPPLsrjqJgFGYExWoNAJlU9En/lr5KNmR+oAGMi3JU76hceInckrZd7bTuCgG1k50Nir5eQiTuCl3Kd4uFZoPHXX6fsVqLspgDwg=';
 
 
 

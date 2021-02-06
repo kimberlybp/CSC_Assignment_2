@@ -23,6 +23,7 @@ function routes(app) {
     app.get('/api/getAllPlans', plans.getAll);
     app.get('/api/stripeSetup', stripeApi.setUp);
     app.post('/api/createFreeCheckoutSession', stripeApi.createFreeCheckoutSession);
+    app.post('/api/createPaidCheckoutSession', stripeApi.createPaidCheckoutSession);
     app.get('/api/getCheckoutSessionData', stripeApi.getCheckoutSessionData);
     app.post('/api/createNewCustomer', stripeApi.createNewCustomer);
 }

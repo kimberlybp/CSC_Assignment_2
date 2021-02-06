@@ -36,10 +36,13 @@ function talentDetails(con, s3, firestore) {
                 var gender = req.body.Gender ? req.body.Gender : null;
                 var age = req.body.Age ? req.body.Age : null;
                 var profilePic = req.body.ProfilePic ? req.body.ProfilePic : null;
-                con.query(`INSERT INTO main.Talents (FirstName, LastName, Description, Gender, Age, ProfilePic) VALUES ('${req.body.FirstName}', '${req.body.LastName}', '${desc}', '${gender}', '${age}', '${profilePic}',${req.body.firebaseUid})`, function (err, result, fields) {
-                    if (err) res.status(500).json({ code: 500, err });
+                con.query(`INSERT INTO main.Talents (FirstName, LastName, Description, Gender, Age, ProfilePic, FirebaseUid) VALUES ('${req.body.FirstName}', '${req.body.LastName}', '${desc}', '${gender}', '${age}', '${profilePic}','${req.body.FirebaseUid}')`, function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).json({ code: 500, err });
+                        
+                }
                     if (result) res.status(200).json({ code: 200, result });
-                    if (fields) console.log(fields);
                 });
             });
         } else {
@@ -82,7 +85,8 @@ function talentDetails(con, s3, firestore) {
         var object = {
             uid: req.body.uid,
             stripeCustomerId: req.body.stripeCustomerId,
-            subscriptionPriceId: req.body.subscriptionPriceId
+            subscriptionPriceId: req.body.subscriptionPriceId,
+            createdAt: new Date()
         }
 
         var oneRow = firestore.collection('UserSubscriptionPlans').doc(object.uid);

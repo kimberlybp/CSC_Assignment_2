@@ -50,7 +50,7 @@ $(document)
                         .then((userCredential) => {
                             // Signed in 
                             var user = userCredential.user;
-                            window.location.href = 'signUp/setUpProfile';
+                            window.location.href = 'setUpProfile';
                         })
                         .catch((error) => {
                             var errorMessage = 'An unexpected error occured trying to create your account. Please try again.'

@@ -7,15 +7,15 @@ function stripeApi(stripe) {
 
     async function createFreeCheckoutSession(req, res) {
         const domainURL = process.env.DOMAIN;
-        const { priceId, customerId } = req.body;
+        const { customerId, priceId } = req.body;
 
         try {
             const session = await stripe.checkout.sessions.create({
                 customer: customerId,
                 mode: 'setup',
                 payment_method_types: ['card'],
-                success_url: `${domainURL}/paymentSetupSuccess.html?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${domainURL}/setUpPlan.html?session_id={CHECKOUT_SESSION_ID}`,
+                success_url: `${domainURL}paymentSetupSuccess?session_id={CHECKOUT_SESSION_ID}&price_id=${priceId}`,
+                cancel_url: `${domainURL}setUpPlan?session_id={CHECKOUT_SESSION_ID}`,
             });
 
             res.send({
@@ -23,13 +23,45 @@ function stripeApi(stripe) {
             });
         } catch (e) {
             res.status(400);
-            console.log(e.message);
             return res.send({
                 error: {
                     message: e.message,
                 },
             });
-            
+
+        }
+    }
+
+    async function createPaidCheckoutSession(req, res) {
+        const domainURL = process.env.DOMAIN;
+        const { priceId, customerId } = req.body;
+
+        try {
+            const session = await stripe.checkout.sessions.create({
+                customer: customerId,
+                mode: 'subscription',
+                payment_method_types: ['card'],
+                line_items: [
+                    {
+                        price: priceId,
+                        quantity: 1,
+                    },
+                ],
+                success_url: `${domainURL}paymentSetupSuccess?session_id={CHECKOUT_SESSION_ID}&price_id=${priceId}`,
+                cancel_url: `${domainURL}setUpPlan?session_id={CHECKOUT_SESSION_ID}`,
+            });
+
+            res.send({
+                sessionId: session.id,
+            });
+        } catch (e) {
+            res.status(400);
+            return res.send({
+                error: {
+                    message: e.message,
+                },
+            });
+
         }
     }
 
@@ -44,12 +76,15 @@ function stripeApi(stripe) {
         try {
             const customer = await stripe.customers.create({
                 description: 'Talent',
-                email: req.body.email
+                email: req.body.email,
+                metadata: {
+                    uid: req.body.uid
+                }
             });
 
-            res.status(200).json({ code:200, customerId: customer.id});
+            res.status(200).json({ code: 200, customerId: customer.id });
         } catch (e) {
-            res.status(500).json({ code:500, message: 'Internal Stripe Server error.'})
+            res.status(500).json({ code: 500, message: 'Internal Stripe Server error.' })
         }
     }
 
@@ -58,7 +93,8 @@ function stripeApi(stripe) {
         setUp: setUp,
         createFreeCheckoutSession: createFreeCheckoutSession,
         getCheckoutSessionData: getCheckoutSessionData,
-        createNewCustomer: createNewCustomer
+        createNewCustomer: createNewCustomer,
+        createPaidCheckoutSession: createPaidCheckoutSession
     }
 
 }
