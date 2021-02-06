@@ -26,6 +26,7 @@ function routes(app) {
     app.post('/api/createPaidCheckoutSession', stripeApi.createPaidCheckoutSession);
     app.get('/api/getCheckoutSessionData', stripeApi.getCheckoutSessionData);
     app.post('/api/createNewCustomer', stripeApi.createNewCustomer);
+    app.post('/api/searchTalents', talentDetails.search);
 }
 
 module.exports = routes;

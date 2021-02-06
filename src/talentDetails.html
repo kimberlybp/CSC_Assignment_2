@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <link rel="stylesheet" href="css/home.css"> -->
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+        <!-- You MUST include jQuery before Fomantic -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script>
+    </head>
+
+    <body>
+        <div class="w3-container" id="userMenu">
+            <div style="display: flex; justify-content: space-between">
+                <h2>List of users</h2>
+                <div class="ui left icon input">
+                    <i class="users icon"></i>
+                    <input type="text" id="searchBar" placeholder="Search users..." />
+                </div>
+            </div>
+            <div class="ui stacked segment">
+                <div id="talentsList"></div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            (function ($, window) {
+                let arrayOfTalents = [];
+                let array = [];
+
+                loadData();
+
+                function loadData() {
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail',
+                        success: function (data) {
+                            if (data) {
+                                Object.values(data).forEach((element) => {
+                                    var list = `<div class="ui segment"><i class="user icon"></i><a href='/test.html?id=${element.TalentId}'>${element.FirstName} ${element.LastName}</a>
+                             <p>${element.Description}</p></div>`;
+                                    arrayOfTalents.push(list);
+
+                                    var obj = {
+                                        id: element.TalentId,
+                                        firstName: element.FirstName,
+                                        lastName: element.LastName,
+                                        desc: element.Description,
+                                    };
+                                    array.push(obj);
+                                });
+                                $('#talentsList').append(arrayOfTalents);
+                            } else $('#talentsList').append('<h1>No record(s)</h1>');
+                        },
+                        error: function (data) {},
+                    });
+                }
+
+                // search
+                const searchBar = document.getElementById('searchBar');
+                console.log(array);
+                searchBar.addEventListener('keyup', (e) => {
+                    arrayOfTalents = [];
+                    const filtered = array.filter((val) => {
+                        return (
+                            val.firstName.toLowerCase().includes(e.target.value) ||
+                            val.lastName.toLowerCase().includes(e.target.value)
+                        );
+                    });
+                    if (filtered.length <= 0) {
+                        var msg = `<h1>No record(s)</h1>`;
+                        arrayOfTalents.push(msg);
+                    } else {
+                        filtered.forEach((val) => {
+                            console.log(val);
+                            var list = `<div class="ui segment"><i class="user icon"></i><a href='/test.html?id=${val.id}'>${val.firstName} ${val.lastName}</a>
+                             <p>${val.desc}</p></div>`;
+                            arrayOfTalents.push(list);
+                        });
+                    }
+
+                    $('#talentsList').empty();
+                    $('#talentsList').append(arrayOfTalents);
+                });
+            })($, window);
+        </script>
+    </body>
+</html>
