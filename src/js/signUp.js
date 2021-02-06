@@ -1,5 +1,6 @@
 $(document)
     .ready(function () {
+        showLoader();
         $('.ui.form')
             .form({
                 fields: {
@@ -45,6 +46,7 @@ $(document)
                 },
                 onSuccess: function (event, fields) {
                     event.preventDefault();
+                    showLoader();
                     hideFirebaseError(); // in case its open
                     firebase.auth().createUserWithEmailAndPassword(fields.email, fields.password)
                         .then((userCredential) => {
@@ -54,28 +56,38 @@ $(document)
                         })
                         .catch((error) => {
                             var errorMessage = 'An unexpected error occured trying to create your account. Please try again.'
-                            if(error.code == 'auth/email-already-in-use'){
+                            if (error.code == 'auth/email-already-in-use') {
                                 errorMessage = "This email is already taken. Please choose another."
-                            } else if (error.code = 'auth/invalid-email'){
+                            } else if (error.code = 'auth/invalid-email') {
                                 errorMessage = "Invalid email format."
-                            } else if (error.code = 'auth/weak-password'){
+                            } else if (error.code = 'auth/weak-password') {
                                 errorMessage = "Password not strong enough."
                             }
+                            hideLoader();
                             showFirebaseError(errorMessage);
-                    });
+                        });
                 },
-                onFailure: function(formErrors, fields){
+                onFailure: function (formErrors, fields) {
                     hideFirebaseError();
                     return false;
                 }
             });
+        hideLoader();
     });
 
-    function showFirebaseError(message) {
-        document.getElementById('firebase-message').innerHTML += message;
-        document.getElementById('firebase-message').style.display = "block";
-    }
+function showFirebaseError(message) {
+    document.getElementById('firebase-message').innerHTML = message;
+    document.getElementById('firebase-message').style.display = "block";
+}
 
-    function hideFirebaseError(){
-        document.getElementById('firebase-message').style.display = "none";
-    }
+function hideFirebaseError() {
+    document.getElementById('firebase-message').style.display = "none";
+}
+
+function showLoader() {
+    document.getElementById('loader').classList.add("active");
+}
+
+function hideLoader() {
+    document.getElementById('loader').classList.remove("active");
+}

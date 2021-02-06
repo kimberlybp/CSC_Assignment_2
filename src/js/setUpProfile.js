@@ -19,6 +19,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 $(document)
     .ready(function () {
+        showLoader();
         const uploadProfilePicBtn = document.getElementById('upload-profilePic-button');
         var image;
 
@@ -159,15 +160,17 @@ $(document)
                 },
                 onSuccess: function (event, fields) {
                     event.preventDefault();
+                    showLoader();
                     if (isHuman == null || isHuman) {
                         axios.post(
-                            `/api/postTalentWithFirebase`,
+                            `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail`,
                             {
                                 FirstName: fields.firstName,
                                 LastName: fields.lastName,
                                 FirebaseUid: currentUser.uid,
+                                Interest: fields.interest,
                                 Description: fields.description.replace(/(["'])/g, "\\$1"),
-                                Gender: fields.gender,
+                                Gender: fields.gender.charAt(fields.gender.length-1),
                                 Age: fields.age,
                                 ProfilePic: profilePicUrl
                             }
@@ -179,13 +182,24 @@ $(document)
 
                             window.location.href = 'setUpPlan';
                         }).catch(function (error) {
-                            showErrorMessage("We are having trouble uploading your profile picture. Please try again.");
+                            hideLoader();
+                            showErrorMessage("We are having trouble uploading your profile details.");
                         });
                     } else {
+                        hideLoader()
                         $("html, body").animate({ scrollTop: 0 }, 500);
                     }
                 }
             })
             ;
+            hideLoader();
     })
     ;
+
+    function showLoader() {
+        document.getElementById('loader').classList.add("active");
+    }
+    
+    function hideLoader() {
+        document.getElementById('loader').classList.remove("active");
+    }

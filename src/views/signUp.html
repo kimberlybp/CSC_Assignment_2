@@ -3,46 +3,47 @@
 
 <head>
     <!-- Standard Meta -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <!-- Site Properties -->
-    <title>TLTT</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-        href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.css">
-    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
-    <script src="./js/initFirebase.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.js"></script>
-    <script src="./js/signUp.js"></script>
+<!-- Site Properties -->
+<title>TLTT</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.css">
+<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
+<script src="./js/initFirebase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.js"></script>
+<script src="./js/signUp.js"></script>
 
-    <style type="text/css">
-        body {
-            background-color: #DADADA;
-        }
+<style type="text/css">
+    body {
+        background-color: #DADADA;
+    }
 
-        body>.grid {
-            height: 100%;
-        }
+    body>.grid {
+        height: 100%;
+    }
 
-        .column {
-            padding: 0 !important;
-        }
+    .column {
+        padding: 0 !important;
+    }
 
-        .ui.grid {
-            margin: 0 !important
-        }
+    .ui.grid {
+        margin: 0 !important
+    }
 
-        .ui.segment.login-right-container {
-            background-color: #B3D1E8;
-        }
-    </style>
+    .ui.segment.login-right-container {
+        background-color: #B3D1E8;
+    }
+</style>
 </head>
 
 <body>
-
+    <div id="loader" class="ui dimmer" style="position: fixed;">
+        <div class="ui loader"></div>
+    </div>
     <div class="ui centered grid">
         <div class="seven wide column">
             <form class="ui large signup form" style="min-height: 100%">
@@ -86,7 +87,8 @@
                             <p style="margin: 0;">Already have an account? <a href="login">Sign In</a></p>
                         </div>
                         <div class="ui error red message" style="max-width: fit-content;"></div>
-                        <div id="firebase-message" class="ui red message" style="display:none; max-width: fit-content;"></div>
+                        <div id="firebase-message" class="ui red message" style="display:none; max-width: fit-content;">
+                        </div>
                     </div>
                 </div>
 
