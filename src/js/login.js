@@ -1,5 +1,6 @@
 $(document)
     .ready(function () {
+        showLoader();
         $('.ui.form')
             .form({
                 fields: {
@@ -31,19 +32,37 @@ $(document)
                     }
                 },
                 onSuccess: function (event, fields) {
+                    showLoader();
                     firebase.auth().signInWithEmailAndPassword(fields.email, fields.password)
                         .then((userCredential) => {
                             // Signed in
                             var user = userCredential.user;
                             window.location.href = 'home';
-                            // ...
                         })
                         .catch((error) => {
                             var errorCode = error.code;
                             var errorMessage = error.message;
+                            hideLoader();
+                            showErrorMessage('An error occurred. Please try logging in again.')
                         });
                 }
             })
             ;
+            hideLoader();
+    })
+function showLoader() {
+    document.getElementById('loader').classList.add("active");
+}
 
-        })
+function hideLoader() {
+    document.getElementById('loader').classList.remove("active");
+}
+
+var showErrorMessage = function (message) {
+    $('body')
+        .toast({
+            message: message,
+            class: 'red',  //cycle through all colors
+            showProgress: 'bottom'
+        });
+};
