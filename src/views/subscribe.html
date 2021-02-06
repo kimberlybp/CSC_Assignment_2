@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSC Assignment 2</title>
+        <meta name="description" content="A demo of Stripe Payment Intents" />
+
+        <link rel="stylesheet" href="css/normalize.css" />
+        <link rel="stylesheet" href="css/subscribe.css" />
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+        <!-- Load Stripe.js on your website. -->
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="./js/subscribe.js" defer></script>
+    </head>
+
+    <body>
+        <div id="loading-overlay">
+            <div class="loader"></div>
+            <div class="loader-text">Loading..</div>
+        </div>
+        <div class="togethere-background"></div>
+        <div class="sr-root">
+            <div class="sr-main">
+                <header class="sr-header">
+                    <div class="sr-header__logo"></div>
+                    <div id="welcome"></div>
+                </header>
+                <form id="manage-billing-form">
+                    <button id="manage">Manage Billing</button>
+                </form>
+
+                <h1>Select the subscription plan</h1>
+
+                <div class="price-table-container" style="margin-bottom: 100px; display: flex; justify-content: center">
+                    <section>
+                        <img src="/assets/starter.png" width="120" height="120" />
+                        <div class="name">Free</div>
+                        <div class="price">$0</div>
+                        <div class="duration">FOC</div>
+                        <button id="free-plan-btn">Select</button>
+                    </section>
+                    <section>
+                        <img src="/assets/premium.png" width="120" height="120" />
+                        <div class="name">VIP plan</div>
+                        <div class="price">$50</div>
+                        <div class="duration">per month</div>
+                        <button id="paid-plan-btn">Select</button>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div id="error-message" class="error-message"></div>
+    </body>
+</html>

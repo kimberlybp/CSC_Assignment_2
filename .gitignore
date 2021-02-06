@@ -4,5 +4,7 @@
 /node_modules
 
 .env
+*.REST
+csc-assignment-2-436b4-firebase-adminsdk-mltrx-144eb9f622.json
 
 
