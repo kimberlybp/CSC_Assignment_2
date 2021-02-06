@@ -28,7 +28,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/test', function (req, res) {
-    const filePath = path.resolve(__dirname + '/src/test.html');
+    const filePath = path.resolve(__dirname + '/src/talentDetails.html');
     res.sendFile(filePath);
 });
 
@@ -52,25 +52,36 @@ const index = client.initIndex('talents');
 // index.saveObjects(objects).then(({ objectIDs }) => {
 //     console.log(objectIDs);
 // });
-app.get('/search', function (req, res) {
-    let array = [];
-    let query = req.body.query;
-    if (query) {
-        index
-            .search(query, {
-                attributesToRetrieve: ['firstname', 'lastname'],
-                hitsPerPage: 50,
-            })
-            .then(({ hits }) => {
-                Object.values(hits).forEach((value) => {
-                    array.push(value);
-                });
-                if (array.length > 0) {
-                    res.send({ data: hits });
-                } else res.send(`No record(s) available.`);
-            })
-            .catch((err) => res.status(400).send(`Error executing search: ${err}`));
-    } else res.status(400).send(`Please provide a query string.`);
+// app.get('/search', function (req, res) {
+//     let array = [];
+//     let query = req.body.query;
+//     if (query) {
+//         index
+//             .search(query, {
+//                 attributesToRetrieve: ['firstname', 'lastname'],
+//                 hitsPerPage: 50,
+//             })
+//             .then(({ hits }) => {
+//                 Object.values(hits).forEach((value) => {
+//                     array.push(value);
+//                 });
+//                 if (array.length > 0) {
+//                     res.send({ data: hits });
+//                 } else res.send(`No record(s) available.`);
+//             })
+//             .catch((err) => res.status(400).send(`Error executing search: ${err}`));
+//     } else res.status(400).send(`Please provide a query string.`);
+// });
+app.post('/search', function (req, res) {
+    const db = dbService.getDbServiceInstance();
+    //console.log(req.body);
+
+    const result = db.searchTalentByFirstName(req.body.query);
+    result
+        .then(res.send('Comment stored in database!'))
+        .catch((err) => res.status(400).send(`Error adding comment: ${err}`));
+    pusher.trigger('flash-comments', 'new_comment', newComment);
+    res.json({ created: true });
 });
 
 // pusher-test

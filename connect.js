@@ -12,28 +12,4 @@ con.connect(function (err) {
     console.log('Connected!');
 });
 
-class DbService {
-    static getDbServiceInstance() {
-        if (!instance) instance = new DbService();
-        return instance;
-    }
-
-    async postComment(fName, lName, comment) {
-        let timestamp = new Date.now();
-
-        return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO Comments (FirstName, LastName, CreatedAt, Comment) VALUES (?,?,?,?);';
-
-            connection.query(query, [fName, lName, timestamp, comment], (err, result) => {
-                if (err) {
-                    console.log(err.message);
-                    reject(err.message);
-                }
-                resolve(result);
-            });
-        });
-    }
-}
-
 module.exports = con;
-module.exports = DbService;
