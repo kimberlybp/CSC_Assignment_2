@@ -167,7 +167,7 @@ $(document)
                             {
                                 FirstName: fields.firstName,
                                 LastName: fields.lastName,
-                                FirebaseUid: currentUser.uid,
+                                objectID: currentUser.uid,
                                 Interest: fields.interest,
                                 Description: fields.description.replace(/(["'])/g, "\\$1"),
                                 Gender: fields.gender.charAt(fields.gender.length-1),

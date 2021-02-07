@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
-const firebaseUidSchema= Joi.object({
-    FirebaseUid: Joi.string()
+const objectIDSchema= Joi.object({
+    objectID: Joi.string()
     .min(1)
     .max(255)
     .required()
@@ -34,5 +34,5 @@ const postUserSubscriptionPlanSchema = Joi.object({
 module.exports = {
     postTalentProfilePictureSchema: postTalentProfilePictureSchema,
     postUserSubscriptionPlanSchema: postUserSubscriptionPlanSchema,
-    firebaseUidSchema: firebaseUidSchema
+    objectIDSchema: objectIDSchema
 }

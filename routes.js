@@ -9,8 +9,11 @@ admin.initializeApp(
 );
 
 const firestore = admin.firestore();
+const agoliaSearch = require('algoliasearch');
+const client = agoliaSearch(process.env.ALGOLIA_APP_KEY, process.env.ALGOLIA_ADMIN_KEY);
+const algoliaIndex = client.initIndex('talents');
 
-const talentDetails = require('./api/talentDetails')(connect, s3, firestore);
+const talentDetails = require('./api/talentDetails')(connect, s3, firestore, algoliaIndex);
 const plans = require('./api/plans')(connect);
 const stripeApi = require('./api/stripe')(stripe);
 
@@ -27,6 +30,7 @@ function routes(app) {
     app.get('/api/getCheckoutSessionData', stripeApi.getCheckoutSessionData);
     app.post('/api/createNewCustomer', stripeApi.createNewCustomer);
     app.post('/api/searchTalents', talentDetails.search);
+    app.post('/api/addTalentToAlgolia', talentDetails.addTalentToAlgolia);
 }
 
 module.exports = routes;

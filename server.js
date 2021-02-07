@@ -59,11 +59,23 @@ app.get('/paymentSetupSuccess', function (req, res) {
     res.sendFile(filePath);
   });
 
+  app.get('/discover', function (req, res) {
+    const filePath = path.resolve(__dirname + '/src/views/discover.html');
+    res.sendFile(filePath);
+});
+
+  app.get('/search', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/talentDetails.html");
+    res.sendFile(filePath);
+  });
+
+  app.get('/profile', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/profile.html");
+    res.sendFile(filePath);
+  });
 
 //agolia
-const agoliaSearch = require('algoliasearch');
-const client = agoliaSearch(process.env.APP_KEY, process.env.ADMIN_KEY);
-const index = client.initIndex('talents');
+
 // const objects = [
 //     {
 //         objectID: 'myID1',
@@ -111,37 +123,6 @@ app.post('/search', function (req, res) {
     pusher.trigger('flash-comments', 'new_comment', newComment);
     res.json({ created: true });
 });
-
-// pusher-test
-const Pusher = require('pusher');
-
-const pusher = new Pusher({
-    appId: '1150987',
-    key: '3a44ea21cd9b397e8910',
-    secret: '7de03a2b7535fdd9bf7b',
-    cluster: 'ap1',
-    useTLS: true,
-});
-
-app.post('/comment', function (req, res) {
-    const db = dbService.getDbServiceInstance();
-    //console.log(req.body);
-    var newComment = {
-        fname: req.body.name,
-        lname: req.body.email,
-        comment: req.body.comment,
-    };
-    const result = db.postComment(newComment.fname, newComment.lname, newComment.comment);
-    result
-        .then(res.send('Comment stored in database!'))
-        .catch((err) => res.status(400).send(`Error adding comment: ${err}`));
-    pusher.trigger('flash-comments', 'new_comment', newComment);
-    res.json({ created: true });
-});
-
-// pusher.trigger('my-channel', 'my-event', {
-//     message: 'hello world',
-// });
 
 require('./routes')(app);
 

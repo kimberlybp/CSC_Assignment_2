@@ -4,7 +4,7 @@ const FILE_PERMISSION = 'public-read';
 const { Buffer } = require('buffer');
 const joiValidation = require('../joiValidation/talentDetailsValidation');
 
-function talentDetails(con, s3, firestore) {
+function talentDetails(con, s3, firestore, algoliaIndex) {
 
 
     function postTalentDetails(req, res) {
@@ -66,8 +66,8 @@ function talentDetails(con, s3, firestore) {
                     if (err) {
                         console.log(err);
                         res.status(500).json({ code: 500, err });
-                        
-                }
+
+                    }
                     if (result) res.status(200).json({ code: 200, result });
                 });
             });
@@ -115,51 +115,61 @@ function talentDetails(con, s3, firestore) {
     async function postUserSubscriptionPlan(req, res) {
         const { error, value } = joiValidation.postUserSubscriptionPlanSchema.validate(req.body);
         if (!error) {
-        var object = {
-            uid: req.body.uid,
-            stripeCustomerId: req.body.stripeCustomerId,
-            subscriptionPriceId: req.body.subscriptionPriceId,
-            createdAt: new Date()
-        }
+            var object = {
+                uid: req.body.uid,
+                stripeCustomerId: req.body.stripeCustomerId,
+                subscriptionPriceId: req.body.subscriptionPriceId,
+                createdAt: new Date()
+            }
 
-        var oneRow = firestore.collection('UserSubscriptionPlans').doc(object.uid);
+            var oneRow = firestore.collection('UserSubscriptionPlans').doc(object.uid);
 
-        await oneRow
-            .set(object)
-            .then(res.status(200).json({ message: 'Successfully added.' }))
-            .catch((err) => {
-                res.status(400).json({ err });
-            });
-        }else{
+            await oneRow
+                .set(object)
+                .then(res.status(200).json({ message: 'Successfully added.' }))
+                .catch((err) => {
+                    res.status(400).json({ err });
+                });
+        } else {
             res.status(400).json({ code: 400, message: error });
         }
     }
 
-    function getTalentDetailsByFirebase(req, res){
-        const { error, value } = joiValidation.firebaseUidSchema.validate(req.query);
-        if(!error){
-        con.connect(function (err) {
-            con.query(`SELECT * FROM main.Talents where FirebaseUid='${req.query.FirebaseUid}'`, function (err, result, fields) {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ code: 500, err });
-                    
-            }
-                if (result) res.status(200).json({ code: 200, result });
+    function getTalentDetailsByFirebase(req, res) {
+        const { error, value } = joiValidation.objectIDSchema.validate(req.query);
+        if (!error) {
+            con.connect(function (err) {
+                con.query(`SELECT * FROM main.Talents where objectID='${req.query.objectID}'`, function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).json({ code: 500, err });
+
+                    }
+                    if (result) res.status(200).json({ code: 200, result });
+                });
             });
-        });
-    }else{
-        res.status(400).json({ code: 400, message: error });
-    }
+        } else {
+            res.status(400).json({ code: 400, message: error });
+        }
     }
 
+    function addTalentToAlgolia(req, res) {
+        var talent = req.body.talent;
+        algoliaIndex.saveObject(talent).then(( objectID ) => {
+            res.status(200).json({ code: 200, objectID });
+        }).catch((e) => {
+            res.status(400).json({ code: 400, message: 'Error with Algolia' });
+        })
+    }
 
     return {
         post: postTalentDetails,
         postWithFirebase: postTalentDetailsWithFirebase,
         postProfilePicture: postTalentProfilePicture,
         postUserSubscriptionPlan: postUserSubscriptionPlan,
-        getTalentDetailsByFirebase: getTalentDetailsByFirebase
+        getTalentDetailsByFirebase: getTalentDetailsByFirebase,
+        search: searchTalentByFirstName,
+        addTalentToAlgolia: addTalentToAlgolia
     }
 
 }

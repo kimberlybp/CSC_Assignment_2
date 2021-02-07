@@ -97,8 +97,7 @@
 
             })
     </script>
-    <script src="js/index.js"></script>
-
+    <script src="js/discover.js"></script>
 </head>
 
 <body>
@@ -112,8 +111,8 @@
 
             <div class="ui container">
                 <div class="ui large secondary inverted pointing menu">
-                    <a class="active item">Home</a>
-                    <a class="item" href="discover">Discover</a>
+                    <a class="item" href="/">Home</a>
+                    <a class="active item" href="discover">Discover</a>
                     <div class="right menu">
                         <div id="login-signup" style="display: flex;">
                             <div class="item">
@@ -139,15 +138,21 @@
                 </div>
             </div>
 
-            <div class="ui text container">
-                <img src='./assets/home.svg' style="max-width: 500px;
-                margin-top: 20px;">
-                <h1 class="ui inverted header" style="margin-top: 0;">
-                    Welcome to The Life Time Talents!
-                </h1>
-                <h2>Connect, share and react with talents <br /> around the world.</h2>
-                <div class="ui huge primary button">Get Started <i class="right arrow icon"></i></div>
-            </div>
+            
+            <div class="ui placeholder segment">
+                <div class="ui text container">
+                    <img src='./assets/discover.svg' style="max-width: 200px;
+                    margin-top: 20px;">
+                    <h2 class="ui header" style="margin-top: 0;">
+                        Discover
+                    </h2>
+                    <p>Go ahead and explore!</p>
+                </div>
+                <div class="ui large icon input">
+                    <input type="text" placeholder="Search for Talents...">
+                    <i class="circular search link icon"></i>
+                  </div>
+              </div>
 
         </div>
 
@@ -183,7 +188,6 @@
     </div>
 
 </body>
-
 <script src="js/shared.js"></script>
 
 </html>

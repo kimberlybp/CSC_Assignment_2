@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Talent</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.357.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
+    <script src="./js/initFirebase.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.js"></script>
+</head>
+
+<body>
+
+    <div id="loader" class="ui dimmer" style="position: fixed;">
+        <div class="ui loader"></div>
+    </div>
+    <div class="ui inverted vertical masthead center aligned segment" style="background-color: #3679AB;">
+
+        <div class="ui container">
+            <div class="ui large secondary inverted pointing menu">
+                <a class="active item">Home</a>
+                <a class="item" href="discover">Discover</a>
+                <div class="right menu">
+                    <div id="login-signup" style="display: flex;">
+                        <div class="item">
+                            <a class="ui button" href='login'>Log in</a>
+                        </div>
+                        <div class="item">
+                            <a class="ui primary button" href='signup'>Sign Up</a>
+                        </div>
+                    </div>
+                    <div class="ui dropdown">
+                        <div id="profile" class="ui tertiary button" style="color: white; display: none;">
+                            <img id="profilePic" class="ui avatar image" src="./assets/user.png"
+                                style="background-color: white;">
+                            <span id="nameNav">Username</span>
+                            <i class="caret down icon"></i>
+                        </div>
+                        <div class="menu">
+                            <div class="item" onclick='window.location.href="profile"''>View my profile</div>
+                            <div class="item">Manage my billing</div>
+                            <div class="item" id="logout">Log out</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <h1 id="profileTitle">My Profile Page</h1>
+                                <!-- <input type="file" id="upload-profilePic-button2" onchange="uploadFile()"hidden style="display: none;"/>     -->
+
+                                <hr>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <u style="font-size: large;" class="ui header">Profile Picture</u>
+                                            <div id="temp"
+                                                style="border:solid black 1px;padding:0.5vw 1vw;margin:0.5vw auto">
+                                                <img id="talentProfilePic" src=""
+                                                    style="display: block; width:100%;height:auto;" alt="Profile Pic">
+                                            </div>
+                                            <!-- <div id = "signature" style="border: black dotted 1px; margin-top: 1vw;height:5vw">
+          <p>Talent's Signature</p>
+        </div> -->
+                                            <div>
+                                                <input type="file" id="upload-profilePic-button" hidden
+                                                    style="display: none;" />
+
+                                                <label class="ui button" for="upload-profilePic-button"
+                                                    style="margin: 15px auto; display: block;">Upload Profile
+                                                    Picture</label>
+                                                <div id="error-message" class="ui red message profilePic"
+                                                    style="display: none; width: 400px;">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-8" style="border:black solid 1px;">
+                                            <div style="margin-top: 1vw;margin-bottom: 1vw;">
+                                                <u style="font-size: large; " class="ui header">Profile Details</u>
+                                                <button id="allowEdit" class="ui button" onclick="enabled()" style="float: right; margin-bottom: 10px;">Edit
+                                                    Profile Details</button>
+                                                <button id="denyEdit" onclick="disabledIt()"
+                                                    style="float: right;display:none;">Cancel</button>
+                                            </div>
+                                            <form class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label for="inputEmail" class="col-sm-3 control-label">First Name
+                                                    </label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="firstNameInput"
+                                                            placeholder="Name" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputEmail" class="col-sm-3 control-label">Last Name
+                                                    </label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="lastNameInput"
+                                                            placeholder="Name" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-3 control-label">Full
+                                                        Description</label>
+                                                    <div class="col-sm-9">
+                                                        <textarea class="form-control" id="descriptionTxt" rows="3"
+                                                            disabled></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-3 control-label">Age </label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="ageInput"
+                                                            placeholder="Age" disabled>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-3 control-label">Gender
+                                                    </label>
+                                                    <div class="col-sm-9">
+
+                                                        <select id="genderSelect" class="form-control" disabled>
+                                                            <option value="M">Male</option>
+                                                            <option value="F">Female</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-3 control-label">Interest
+                                                    </label>
+                                                    <div class="col-sm-9">
+                                                        <textarea class="form-control" id="interestTxt" rows="3"
+                                                            disabled></textarea>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-3 col-sm-3">
+
+
+                                                    </div>
+                                                    <div class="col-sm col-sm-3">
+                                                        <!-- <button type="submit" class="btn-block btn-default">Cancel</button> -->
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div id="btnSet" style="margin-bottom: 2vw;display: none;">
+                                                <button id="btnSave" style="margin:0 2vw;width:15vw;"
+                                                    onclick="saveChanges()">Save
+                                                    Changes</button>
+                                                <button id="btnCancel" style="width:15vw;"
+                                                    onclick="disabledIt()">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="pictureContainer"></div>
+                            </div>
+                            <div id="line" style="width: 100%;height:1px;background-color: black;margin-top:1vw;"></div>
+                            <div id="photoCollection">
+
+                            </div>
+</body>
+
+</html>
+<style>
+    button {
+        border-radius: 2em;
+    }
+</style>
+<script>
+    showLoader()
+    $('.ui.dropdown')
+        .dropdown()
+        ;
+    let ID = null;
+    firebase.auth().onAuthStateChanged(function (user) {
+        showLoader();
+        if (user) {
+            document.getElementById('login-signup').style.display = 'none';
+            axios.get(
+                `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail/objectID/TalentId/${user.uid}`,
+                // { params: { objectID: user.uid } } // returns all plans in db + stripe publishable key
+            ).then(async function (res) {
+                const result = await res.data[0];
+                ID = result.TalentId;
+                loadData();
+                axios.get(
+                    `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail/objectID/${user.uid}`,
+                    // { params: { objectID: user.uid } } // returns all plans in db + stripe publishable key
+                ).then(async function (res) {
+                    const result = await res.data[0];
+                    document.getElementById("profilePic").src = result.ProfilePic;
+                    document.getElementById("nameNav").innerHTML = result.FirstName + ' ' + result.LastName;
+                    document.getElementById('profile').style.display = 'block';
+                    hideLoader();
+                }).catch((e) => {
+                    showErrorMessage(e);
+                })
+            })
+        } else {
+            window.location.href = 'login';
+        }
+    });
+
+    // //Retrieve ID from the Url
+    // const ID = getIdFromAddressBar();
+    // //Function for retrieving ID
+    // function getIdFromAddressBar() {
+    //     let urlArray = window.location.href.split('/');
+    //     let id = urlArray[urlArray.length - 1];
+    //     return id;
+    // };
+
+    //GetMethod
+    function loadData() {
+        showLoader();
+        $.ajax({
+            method: 'GET',
+            url: 'https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail/' + ID,
+            dataType: 'json',
+        }).done(function (data) {
+
+            // $("#profileTitle").text("Hello, " + data[0].FirstName);
+            $("#firstNameInput").val(data[0].FirstName);
+            $("#lastNameInput").val(data[0].LastName);
+            $("#descriptionTxt").val(data[0].Description);
+            $("#ageInput").val(data[0].Age);
+            if (data[0].Gender == "M") {
+                //console.log("This is Test");
+                //$("#genderSelect").val(data[0].Gender);
+                document.getElementById("genderSelect").value = "M";
+            }
+            else {
+                document.getElementById("genderSelect").value = "F";
+            }
+
+            $("#interestTxt").val(data[0].Interest);
+            $("#talentProfilePic").attr("src", data[0].ProfilePic);
+            hideLoader();
+        });
+    }
+
+    //Put MEthod
+    function saveChanges() {
+
+        let firstName = $("#firstNameInput").val();
+        let lastName = $("#lastNameInput").val();
+        let desc = $("#descriptionTxt").val();
+        let age = $("#ageInput").val();
+        let gender = $("#genderSelect").val();
+        let interest = $("#interestTxt").val();
+        let profilePic = $("#talentProfilePic").attr('src');
+        var formData = JSON.stringify({ "ProfilePic": profilePic, "FirstName": firstName, "LastName": lastName, "Description": desc, "Gender": gender, "Age": age, "Interest": interest });
+        var settings = {
+            "url": "https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail/" + ID,
+            "type": "PUT",
+            "data": formData
+        };
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+        setTimeout(function () {
+            location.reload();
+        }, 2500)
+    }
+
+    //used for edit/cancel edit
+    function enabled() {
+        document.getElementById("firstNameInput").disabled = false;
+        document.getElementById("lastNameInput").disabled = false;
+        document.getElementById("descriptionTxt").disabled = false;
+        document.getElementById("ageInput").disabled = false;
+        document.getElementById("genderSelect").disabled = false;
+        document.getElementById("interestTxt").disabled = false;
+        document.getElementById("allowEdit").style.display = "none";
+        document.getElementById("btnSet").style.display = "block";
+        document.getElementById("upload-profilePic-button2").style.display = "block";
+    }
+    function disabledIt() {
+        document.getElementById("firstNameInput").disabled = true;
+        document.getElementById("lastNameInput").disabled = true;
+        document.getElementById("descriptionTxt").disabled = true;
+        document.getElementById("ageInput").disabled = true;
+        document.getElementById("genderSelect").disabled = true;
+        document.getElementById("interestTxt").disabled = true;
+        document.getElementById("allowEdit").style.display = "block";
+        document.getElementById("btnSet").style.display = "none";
+        document.getElementById("upload-profilePic-button2").style.display = "none";
+    }
+
+    var accessKeyId = 'ASIAZ4BSZKKNZVXZW2EF';
+    var secretAccessKey = 'UQWN7OtKiZk8QTilLSpc3p3ZIqgsUfYkuhO8tNcr';
+    var sessionToken = 'FwoGZXIvYXdzEGYaDK5TfNcfJ0zzaKHu1SLKAZ7VmdvyA/8HumEjipOY6K9FWISOSKRuAUxW5Qg0jCFyX67qvUdOEqRfrz+NFn0Nppqo2DIP+q4Vful/6+4JddCBX7zD1LcfF1pYj1CTEWI5GeRy5TkcaVsBk1YstJ2Bi5r6CiRttzVxC4evdrN1hdxUyBUnETaHoTaQgac3qXilZQ+ZWhOnVFMdMTvm2yEO/HlpVlL1H+uVmX0gVR9GHh7Ui4LAybQxB9hnoDC0ufUsgoyMlP0tcB5D9PDRamwFaPYIxqioHYBm7fwoooT8gAYyLYfC+G9LYb+vGQ/9/5k9M5d+FsEnchdE+qtge2tT0waAjcGL8xOvqGJAVjuS9A==';
+    var region = 'us-east-1';
+    var bucketName = 'cscca2talentimage';
+    var ACL = "public-read";
+    var Url = "";
+    AWS.config.update({
+
+        accessKeyId: accessKeyId,
+        secretAccessKey: secretAccessKey,
+        sessionToken: sessionToken
+
+    });
+    AWS.config.region = region;
+    var s3 = new AWS.S3({
+        params: { Bucket: bucketName + '/Profile' }
+    });
+
+    //upload Normal Picture
+    function uploadPicture() {
+        // var s3ForPic = new AWS.S3({
+        //     params: { Bucket: bucketName + '/TalentPhoto' }
+        // });
+        // var file = document.getElementById('upload-Pic-button').files[0];
+        // var fileName = String(file.name);
+        // //var preview = document.querySelector('img');
+        // if (file && (fileName.includes(".jpg") || fileName.includes(".png")
+        //     || fileName.includes(".jpeg"))) {
+        //     //AWS SDK method
+        //     s3ForPic.putObject({
+        //         Key: file.name,
+        //         ContentType: file.type,
+        //         Body: file,
+        //         ACL: ACL
+        //     },
+        //         //     //code for response from AWS
+        //         function (err, data, url) {
+        //             if (err) {
+        //                 reject('error');
+        //             }
+        //             alert('Successfully Uploaded!');
+        //         })
+        //     Url = `https://${bucketName}.s3.amazonaws.com/TalentPhoto/${fileName}`;
+        //     console.log(Url);
+        // } else {
+        //     console.dir("wrong file type");
+        // }
+    }
+
+
+    var getNewProfilePicName = function (originalName) {
+        const identifier = Math.random().toString().replace(/0\./, '');
+        return `${identifier}-${originalName}`;
+    };
+
+    var showErrorMessage = function (message) {
+        $('body')
+            .toast({
+                message: message,
+                class: 'red',  //cycle through all colors
+                showProgress: 'bottom'
+            });
+    };
+
+    var showSuccessMessage = function (message) {
+        $('body')
+            .toast({
+                message: message,
+                class: 'green',  //cycle through all colors
+                showProgress: 'bottom'
+            });
+    };
+
+
+    let clarifaiApiKey = '4d5c076734134510a93a887e932c1576';
+    let workflowId = null;
+    let imageData = null;
+    let isHuman = false;
+    let image = null;
+
+    let app = new Clarifai.App({
+        apiKey: clarifaiApiKey,
+    });
+
+    $(document)
+        .ready(function () {
+
+            // $('body')
+            //     .toast({
+            //         class: 'red',
+            //         message: `Veronika has joined the Fomantic-UI community`
+            //     })
+            //     ;
+
+            const uploadProfilePicBtn = document.getElementById('upload-profilePic-button');
+            var image;
+
+            function validateFile(file) {
+                var message = "";
+                if (!file) {
+                    message = "This image you are trying to upload does not seem to exist. <br/> Please try uploading an image again."
+                    return message;
+                }
+
+                const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg'];
+                if (!validImageTypes.includes(file.type)) {
+                    message = "Unsupported file type! Please try uploading a gif, jpeg, png or svg file."
+                    return message;
+                }
+
+                //empty message if it is all valid
+                return message;
+            }
+
+            uploadProfilePicBtn.addEventListener('change', function () {
+                // this.files[0].name;
+                var errMsg = validateFile(this.files[0]);
+                if (errMsg === "") {
+                    var reader = new FileReader();
+
+                    reader.onload = (e) => {
+                        //document.getElementById('profilePic-preview').src = e.target.result;
+                        image = e.target.result.replace(/^data:image\/(.*);base64,/, '');
+                        showLoader();
+                        app.models
+                            .initModel({
+                                id: 'human',
+                                version: '39b52ad6896e40d7884d8cd3b625b8a9',
+                            })
+                            .then((generalModel) => {
+                                return generalModel.predict(image);
+                            })
+                            .then(
+                                function (response) {
+                                    let concepts = response['outputs'][0]['data']['concepts'];
+                                    if (concepts[0].value > 0.5) {
+                                        isHuman = true;
+                                        //Upload to S3
+
+                                        var file = document.getElementById('upload-profilePic-button').files[0];
+
+                                        var fileName = String(file.name);
+                                        var fileType = file.type
+                                        axios.post(
+                                            `/api/postTalentProfilePicture`,
+                                            {
+                                                fileName: getNewProfilePicName(fileName),
+                                                fileType: fileType,
+                                                image: image
+                                            }
+                                        ).then(async function (res) {
+                                            var profilePicUrl = res.data.url;
+                                            $("#talentProfilePic").attr("src", profilePicUrl);
+                                            await saveChanges();
+                                            hideLoader();
+                                            showSuccessMessage('Successfully uploaded your picture.')
+                                        }).catch(function (error) {
+                                            hideLoader();
+                                            showMessage("We are having trouble uploading your profile picture. Please try again.");
+                                        });
+                                    } else {
+                                        isHuman = false;
+                                        hideLoader();
+                                        showMessage("We have detected that the person in your profile picture is not a human. Please upload a real picture of yourself.");
+                                    }
+
+                                    preview.src = reader.result;
+                                },
+                                function (err) {
+                                    console.log(err);
+                                },
+                            );
+                    }
+
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    showMessage(errMsg);
+                }
+            });
+        });
+
+    var showMessage = function (message) {
+        var messageEl = document.getElementById("error-message")
+        messageEl.textContent = message;
+        messageEl.style.display = "block";
+    };
+
+    function showLoader() {
+        document.getElementById('loader').classList.add("active");
+    }
+
+    function hideLoader() {
+        document.getElementById('loader').classList.remove("active");
+    }
+
+</script>
+<script src="js/shared.js"></script>

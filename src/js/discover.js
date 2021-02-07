@@ -9,11 +9,10 @@ $(document)
                 document.getElementById('login-signup').style.display = 'none';
                 //get user info
                 axios.get(
-                    `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail/objectID/${user.uid}`,
-                    // { params: { objectID: user.uid } } // returns all plans in db + stripe publishable key
+                    `/api/getTalentDetailsByFirebase`,
+                    { params: { objectID: user.uid } } // returns all plans in db + stripe publishable key
                 ).then(async function (res) {
-                    const result = await res.data[0];
-                    console.log(result)
+                    const result = await res.data.result[0];
                     document.getElementById("profilePic").src = result.ProfilePic;
                     document.getElementById("name").innerHTML = result.FirstName + ' ' + result.LastName;
                     document.getElementById('profile').style.display = 'block';
@@ -25,8 +24,6 @@ $(document)
         });
     })
 
-
-
     function showLoader() {
         document.getElementById('loader').classList.add("active");
     }
@@ -34,3 +31,5 @@ $(document)
     function hideLoader() {
         document.getElementById('loader').classList.remove("active");
     }
+
+
