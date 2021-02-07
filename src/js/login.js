@@ -32,6 +32,7 @@ $(document)
                     }
                 },
                 onSuccess: function (event, fields) {
+                    event.preventDefault();
                     showLoader();
                     firebase.auth().signInWithEmailAndPassword(fields.email, fields.password)
                         .then((userCredential) => {

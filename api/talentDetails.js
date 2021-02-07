@@ -155,11 +155,26 @@ function talentDetails(con, s3, firestore, algoliaIndex) {
 
     function addTalentToAlgolia(req, res) {
         var talent = req.body.talent;
-        algoliaIndex.saveObject(talent).then(( objectID ) => {
+        algoliaIndex.saveObject(talent).then((objectID) => {
             res.status(200).json({ code: 200, objectID });
         }).catch((e) => {
             res.status(400).json({ code: 400, message: 'Error with Algolia' });
         })
+    }
+
+    function getTalentDataFromFirestore(req, res) {
+        var docRef = firestore.collection("UserSubscriptionPlans").doc(req.query.uid);
+
+        docRef.get().then((doc) => {
+            if (doc.exists) {
+                res.status(200).json({ code: 200, data: doc.data()})
+            } else {
+                // doc.data() will be undefined in this case
+                res.status(400).json({ code: 400, message: 'Unable to find user.' });
+            }
+        }).catch((error) => {
+            res.status(400).json({ code: 500, message: 'Firestore Internal Server Error' });
+        });
     }
 
     return {
@@ -169,7 +184,8 @@ function talentDetails(con, s3, firestore, algoliaIndex) {
         postUserSubscriptionPlan: postUserSubscriptionPlan,
         getTalentDetailsByFirebase: getTalentDetailsByFirebase,
         search: searchTalentByFirstName,
-        addTalentToAlgolia: addTalentToAlgolia
+        addTalentToAlgolia: addTalentToAlgolia,
+        getTalentDataFromFirestore: getTalentDataFromFirestore
     }
 
 }

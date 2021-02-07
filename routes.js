@@ -31,6 +31,8 @@ function routes(app) {
     app.post('/api/createNewCustomer', stripeApi.createNewCustomer);
     app.post('/api/searchTalents', talentDetails.search);
     app.post('/api/addTalentToAlgolia', talentDetails.addTalentToAlgolia);
+    app.get('/api/getTalentDataFromFirestore', talentDetails.getTalentDataFromFirestore);
+    app.get('/api/getCustomerPortal', stripeApi.getCustomerPortal);
 }
 
 module.exports = routes;
