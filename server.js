@@ -48,6 +48,9 @@ const index = client.initIndex('talents');
 app.get('/setUpProfile', function (req, res) {
   const filePath = path.resolve(__dirname + "/src/views/setUpProfile.html");
   res.sendFile(filePath);
+
+});
+
 // async function initialUpload() {
 //     await fetch('https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail')
 //         .then((res) => res.json())
@@ -93,6 +96,7 @@ app.get('/search', function (req, res) {
             })
             .catch((err) => res.status(400).send(`Error executing search: ${err}`));
     } else res.status(400).send(`Please provide a query string.`);
+
 });
 
 app.get('/setUpPlan', function (req, res) {
@@ -130,8 +134,8 @@ app.get('/paymentSetupSuccess', function (req, res) {
     res.sendFile(filePath);
   });
 
-  app.get('/talents', function (req, res) {
-    const filePath = path.resolve(__dirname + "/src/views/talents.html");
+  app.get('/weixian', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/talentDetails.html");
     res.sendFile(filePath);
   });
 

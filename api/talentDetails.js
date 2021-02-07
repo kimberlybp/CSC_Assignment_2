@@ -28,30 +28,34 @@ function talentDetails(con, s3, firestore, algoliaIndex) {
         }
     }
 
-    function searchTalentByFirstName(req, res) {
-        let input = req.body.query;
-        console.log(input);
+    function search(req, res) {
         let array = [];
-        if (input) {
-            let str = input ? input : null;
-            let statement = `SELECT * FROM main.Talents WHERE FirstName LIKE '%${str}%';`;
-            con.connect(function (err) {
-                con.query(statement, (err, results) => {
-                    if (err) res.status(500).json({ code: 500, err });
-                    else {
-                        Object.values(results).forEach((val) => {
-                            array.push(val);
-                        });
-                        if (array.length > 0) res.status(200).json({ code: 200, array });
-                        else
-                            res.status(200).json({
-                                code: 200,
-                                message: 'No record(s) available.',
-                            });
-                    }
-                });
-            });
-        } else res.status(404).send('Please provide a query string.');
+        let query = req.query.query;
+        if (query) {
+            algoliaIndex
+                .search(query, {
+                    attributesToRetrieve: [
+                        'objectID',
+                        'TalentId',
+                        'FirstName',
+                        'LastName',
+                        'Description',
+                        'Gender',
+                        'Age',
+                        'Interst',
+                    ],
+                    hitsPerPage: 50,
+                })
+                .then(({ hits }) => {
+                    Object.values(hits).forEach((value) => {
+                        array.push(value);
+                    });
+                    if (array.length > 0) {
+                        res.send({ data: hits });
+                    } else res.send(`No record(s) available.`);
+                })
+                .catch((err) => res.status(400).send(`Error executing search: ${err}`));
+        } else res.status(400).send(`Please provide a query string.`);
     }
 
     function postTalentDetailsWithFirebase(req, res) {
@@ -183,7 +187,7 @@ function talentDetails(con, s3, firestore, algoliaIndex) {
         postProfilePicture: postTalentProfilePicture,
         postUserSubscriptionPlan: postUserSubscriptionPlan,
         getTalentDetailsByFirebase: getTalentDetailsByFirebase,
-        search: searchTalentByFirstName,
+        search: search,
         addTalentToAlgolia: addTalentToAlgolia,
         getTalentDataFromFirestore: getTalentDataFromFirestore
     }

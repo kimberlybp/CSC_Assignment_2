@@ -35,6 +35,8 @@
             (function ($, window) {
                 let arrayOfTalents = [];
 
+
+
                 loadData();
 
                 function loadData() {
@@ -47,14 +49,6 @@
                                     var list = `<div class="ui segment"><i class="user icon"></i><a href='/test.html?id=${element.TalentId}'>${element.FirstName} ${element.LastName}</a>
                                  <p>${element.Description}</p></div>`;
                                     arrayOfTalents.push(list);
-
-                                    var obj = {
-                                        id: element.TalentId,
-                                        firstName: element.FirstName,
-                                        lastName: element.LastName,
-                                        desc: element.Description,
-                                    };
-                                    array.push(obj);
                                 });
                                 $('#talentsList').append(arrayOfTalents);
                             } else $('#talentsList').append('<h1>No record(s)</h1>');
@@ -66,7 +60,7 @@
                 document.getElementById('searchForm').addEventListener('submit', (e) => {
                     e.preventDefault();
                     const formData = new FormData(e.target);
-                    fetch(`http://localhost:3000/search?query=${[...formData][0][1]}`)
+                    fetch(`http://localhost:3000/api/searchTalents?query=${[...formData][0][1]}`)
                         .then((res) => res.json())
                         .then((data) => {
                             console.log(data.data);

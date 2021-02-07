@@ -1,8 +1,7 @@
-html,body{overflow-y: scroll; }
-
 body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
     font-family: Raleway;
 }
 
@@ -35,9 +34,8 @@ section {
 .flash-comments {
     border: 1px solid #aeaeae;
     border-radius: 10px;
-    width: 100%;
+    width: 50%;
     overflow: hidden;
-    text-align: center;
 }
 
 .post {

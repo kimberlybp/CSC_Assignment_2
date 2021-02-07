@@ -123,13 +123,14 @@
                             </div>
                         </div>
                         <div class="ui dropdown">
-                        <div id="profile" class="ui tertiary button" style="color: white; display: none;">
-                            <img id="profilePic" class="ui avatar image" src="./assets/user.png" style="background-color: white;">
-                            <span id="name">Username</span>
-                            <i class="caret down icon"></i>
-                        </div>
-                        <div class="menu">
-                            <div class="item" onclick='window.location.href="profile"''>View my profile</div>
+                            <div id="profile" class="ui tertiary button" style="color: white; display: none;">
+                                <img id="profilePic" class="ui avatar image" src="./assets/user.png"
+                                    style="background-color: white;">
+                                <span id="name">Username</span>
+                                <i class="caret down icon"></i>
+                            </div>
+                            <div class="menu">
+                                <div class="item" onclick='window.location.href="profile"''>View my profile</div>
                             <div class="item" id="manageBilling">Manage my billing</div>
                             <div class="item" id="logout">Log out</div>
                           </div>
@@ -141,72 +142,101 @@
             
             <div class="ui placeholder segment">
                 <div class="ui text container">
-                    <img src='./assets/discover.svg' style="max-width: 200px;
+                    <img src=' ./assets/discover.svg' style="max-width: 200px;
                     margin-top: 20px;">
-                    <h2 class="ui header" style="margin-top: 0;">
-                        Discover
-                    </h2>
-                    <p>Go ahead and explore!</p>
-                </div>
-                <div class="ui large icon input">
-                    <input type="text" placeholder="Search for Talents...">
-                    <i class="circular search link icon"></i>
-                  </div>
-              </div>
-              <div class="ui container" id="userMenu">
-                <h2 class='ui header'>Results</h2>
-                <div class="ui list" id="talentsList">
-                </div>
-            </div>
+                                    <h2 class="ui header" style="margin-top: 0;">
+                                        Discover
+                                    </h2>
+                                    <p>Go ahead and explore!</p>
+                                </div>
+                                <div class="ui left icon input">
+                                    <form id="searchForm" class="ui form">
+                                        <input type="text" name="name" placeholder="Name" />
+                                        <button class="ui button" type="submit">Search</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="ui container" id="userMenu">
+                                <h2 class='ui header'>Results</h2>
+                                <div class="ui list" id="talentsList">
+                                </div>
+                            </div>
 
-        </div>
-
-
-
-        <div class="ui placeholder segment">
-            <div class='ui header'>Recommended Talents for you</div>
-            <div id="recList"></div>
-        </div>
+                        </div>
 
 
-        <div class="ui inverted vertical footer segment">
-            <div class="ui container">
-                <div class="ui stackable inverted divided equal height stackable grid">
-                    <div class="three wide column">
-                        <h4 class="ui inverted header">About</h4>
-                        <div class="ui inverted link list">
-                            <a href="#" class="item">Sitemap</a>
-                            <a href="#" class="item">Contact Us</a>
-                            <a href="#" class="item">Religious Ceremonies</a>
-                            <a href="#" class="item">Gazebo Plans</a>
+
+                        <div class="ui placeholder segment">
+                            <div class='ui header'>Recommended Talents for you</div>
+                            <div id="recList"></div>
+                        </div>
+
+
+                        <div class="ui inverted vertical footer segment">
+                            <div class="ui container">
+                                <div class="ui stackable inverted divided equal height stackable grid">
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">About</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Sitemap</a>
+                                            <a href="#" class="item">Contact Us</a>
+                                            <a href="#" class="item">Religious Ceremonies</a>
+                                            <a href="#" class="item">Gazebo Plans</a>
+                                        </div>
+                                    </div>
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">Services</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Banana Pre-Order</a>
+                                            <a href="#" class="item">DNA FAQ</a>
+                                            <a href="#" class="item">How To Access</a>
+                                            <a href="#" class="item">Favorite X-Men</a>
+                                        </div>
+                                    </div>
+                                    <div class="seven wide column">
+                                        <h4 class="ui inverted header">Footer Header</h4>
+                                        <p>Extra space for a call to action inside the footer that could help re-engage
+                                            users.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="three wide column">
-                        <h4 class="ui inverted header">Services</h4>
-                        <div class="ui inverted link list">
-                            <a href="#" class="item">Banana Pre-Order</a>
-                            <a href="#" class="item">DNA FAQ</a>
-                            <a href="#" class="item">How To Access</a>
-                            <a href="#" class="item">Favorite X-Men</a>
-                        </div>
-                    </div>
-                    <div class="seven wide column">
-                        <h4 class="ui inverted header">Footer Header</h4>
-                        <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </body>
 <script src="js/shared.js"></script>
-<script>function storeTalentId(btnValue) {
-    console.log(btnValue);
-    var TalentId = storageObj[btnValue];
-    console.log(TalentId);
-    localStorage.setItem("TalentId", TalentId);
-}
+<script>
+    function storeTalentId(btnValue) {
+        console.log(btnValue);
+        var TalentId = storageObj[btnValue];
+        console.log(TalentId);
+        localStorage.setItem("TalentId", TalentId);
+    }
+
+    (function ($, window) {
+        let arrayOfTalents = [];
+
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            fetch(`http://localhost:3000/api/searchTalents?query=${[...formData][0][1]}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data.data);
+                    arrayOfTalents = [];
+                    data.data.forEach((val) => {
+                        console.log(val);
+                        //     var list = `<div class="ui segment"><i class="user icon"></i><a href='/test.html?id=${val.TalentId}'>${val.FirstName} ${val.LastName}</a>
+                        //  <p>${val.Description}</p></div>`;
+
+                        var list = `<div class='ui item'><a href='/viewIndividualTalent'><button style='text-align:left;' class='ui fluid button' > ${val.FirstName} ${val.LastName} <br><br> ${val.Description} </button></div>`
+                        arrayOfTalents.push(list);
+                    });
+                    $('#talentsList').empty();
+                    $('#talentsList').append(arrayOfTalents);
+                });
+        });
+    })($, window);
 </script>
 
 </html>
