@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dbService = require('./connect.js');
+const fetch = require('node-fetch');
 const app = express();
 
 const envFilePath = path.resolve(__dirname, './.env');
@@ -36,52 +37,52 @@ app.get('/test', function (req, res) {
 const agoliaSearch = require('algoliasearch');
 const client = agoliaSearch(process.env.APP_KEY, process.env.ADMIN_KEY);
 const index = client.initIndex('talents');
-// const objects = [
-//     {
-//         objectID: 'myID1',
-//         firstname: 'Jimmie',
-//         lastname: 'Barninger',
-//     },
-//     {
-//         objectID: 'myID2',
-//         firstname: 'Warren',
-//         lastname: 'Speach',
-//     },
-// ];
 
-// index.saveObjects(objects).then(({ objectIDs }) => {
-//     console.log(objectIDs);
-// });
-// app.get('/search', function (req, res) {
-//     let array = [];
-//     let query = req.body.query;
-//     if (query) {
-//         index
-//             .search(query, {
-//                 attributesToRetrieve: ['firstname', 'lastname'],
-//                 hitsPerPage: 50,
-//             })
-//             .then(({ hits }) => {
-//                 Object.values(hits).forEach((value) => {
-//                     array.push(value);
+// async function initialUpload() {
+//     await fetch('https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail')
+//         .then((res) => res.json())
+//         .then((data) => {
+//             console.log(data);
+//             index
+//                 .saveObjects(data)
+//                 .then(({ objectIDs }) => {
+//                     console.log(objectIDs);
+//                 })
+//                 .catch((err) => {
+//                     console.log(err);
 //                 });
-//                 if (array.length > 0) {
-//                     res.send({ data: hits });
-//                 } else res.send(`No record(s) available.`);
-//             })
-//             .catch((err) => res.status(400).send(`Error executing search: ${err}`));
-//     } else res.status(400).send(`Please provide a query string.`);
-// });
-app.post('/search', function (req, res) {
-    const db = dbService.getDbServiceInstance();
-    //console.log(req.body);
+//         });
+// }
+// initialUpload();
 
-    const result = db.searchTalentByFirstName(req.body.query);
-    result
-        .then(res.send('Comment stored in database!'))
-        .catch((err) => res.status(400).send(`Error adding comment: ${err}`));
-    pusher.trigger('flash-comments', 'new_comment', newComment);
-    res.json({ created: true });
+app.get('/search', function (req, res) {
+    let array = [];
+    let query = req.query.query;
+    if (query) {
+        index
+            .search(query, {
+                attributesToRetrieve: [
+                    'objectID',
+                    'TalentId',
+                    'FirstName',
+                    'LastName',
+                    'Description',
+                    'Gender',
+                    'Age',
+                    'Interst',
+                ],
+                hitsPerPage: 50,
+            })
+            .then(({ hits }) => {
+                Object.values(hits).forEach((value) => {
+                    array.push(value);
+                });
+                if (array.length > 0) {
+                    res.send({ data: hits });
+                } else res.send(`No record(s) available.`);
+            })
+            .catch((err) => res.status(400).send(`Error executing search: ${err}`));
+    } else res.status(400).send(`Please provide a query string.`);
 });
 
 // pusher-test
