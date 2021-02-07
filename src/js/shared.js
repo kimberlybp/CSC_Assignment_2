@@ -22,7 +22,6 @@ document.getElementById('logout').addEventListener('click', function (e) {
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-
         document.getElementById('manageBilling').addEventListener('click', function (e) {
             showLoader();
             axios.get(
@@ -53,7 +52,6 @@ firebase.auth().onAuthStateChanged(function (user) {
             })
         })
     } else {
-        window.location.href = 'login';
     }
 })
 

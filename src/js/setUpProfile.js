@@ -156,57 +156,73 @@ $(document)
                                 prompt: 'Please enter your Last Name'
                             }
                         ]
+                    },
+                    age: {
+                        identifier: 'age',
+                        rules: [
+                            {
+                                type: 'empty',
+                                prompt: 'Please enter your age'
+                            }
+                        ]
                     }
                 },
                 onSuccess: function (event, fields) {
                     event.preventDefault();
                     showLoader();
-                    if (isHuman == null || isHuman) {
-                        axios.post(
-                            `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail`,
-                            {
-                                FirstName: fields.firstName,
-                                LastName: fields.lastName,
-                                objectID: currentUser.uid,
-                                Interest: fields.interest,
-                                Description: fields.description.replace(/(["'])/g, "\\$1"),
-                                Gender: fields.gender.charAt(fields.gender.length - 1),
-                                Age: fields.age,
-                                ProfilePic: profilePicUrl
-                            }
-                        ).then(async function (res) {
-                            await res;
-                            // document.getElementById("profilePic-loading").style.display = "none";
-                            // document.getElementById('profilePic-preview').src = e.target.result;
-                            // showSuccessMessage("Profile picture is human and successfully uploaded.");
+                    // if (isHuman == null || isHuman) {
+                    //     axios.post(
+                    //         `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail`,
+                    //         {
+                    //             FirstName: fields.firstName,
+                    //             LastName: fields.lastName,
+                    //             objectID: currentUser.uid,
+                    //             Interest: fields.interest ? fields.interest : null,
+                    //             Description: fields.description ? fields.description.replace(/(["'])/g, "\\$1") : null,
+                    //             Gender:  fields.gender ? fields.gender.charAt(0) : null,
+                    //             Age: fields.age ?  fields.age : null,
+                    //             ProfilePic: profilePicUrl
+                    //         }
+                    //     ).then(async function (res) {
+                    //         await res;
+                    //         console.log(res);
+                    //         // document.getElementById("profilePic-loading").style.display = "none";
+                    //         // document.getElementById('profilePic-preview').src = e.target.result;
 
-                            axios.post('/api/addTalentToAlgolia',
-                                {
-                                    talent: {
-                                        FirstName: fields.firstName,
-                                        LastName: fields.lastName,
-                                        objectID: currentUser.uid,
-                                        Interest: fields.interest,
-                                        Description: fields.description.replace(/(["'])/g, "\\$1"),
-                                        Gender: fields.gender.charAt(fields.gender.length - 1),
-                                        Age: fields.age,
-                                        ProfilePic: profilePicUrl
-                                    }
-                                }).then(function (res) {
-                                    window.location.href = 'setUpPlan';
-                                }).catch(function (e) {
-                                    hideLoader();
-                                    showErrorMessage("We are having trouble uploading your profile details."); s
-                                })
+                    //         axios.get(
+                    //             `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail/objectID/TalentId/${currentUser.uid}`,
+                    //         ).then(async function (res) {
+                    //             const result = await res.data[0];
+                    //             axios.post('/api/addTalentToAlgolia',
+                    //                 {
+                    //                     talent: {
+                    //                         TalentId: result.TalentId,
+                    //                         FirstName: fields.firstName,
+                    //                         LastName: fields.lastName,
+                    //                         objectID: currentUser.uid,
+                    //                         Interest: fields.interest ? fields.interest : null,
+                    //                         Description: fields.description ? fields.description.replace(/(["'])/g, "\\$1") : null,
+                    //                         Gender:  fields.gender ? fields.gender.charAt(0) : null,
+                    //                         Age: fields.age ?  fields.age : null,
+                    //                         ProfilePic: profilePicUrl
+                    //                     }
+                    //                 }).then(function (res) {
+                    //                     showSuccessMessage("Profile picture is human and successfully uploaded.");
+                    //                     window.location.href = 'setUpPlan';
+                    //                 }).catch(function (e) {
+                    //                     hideLoader();
+                    //                     showErrorMessage("We are having trouble uploading your profile details."); s
+                    //                 })
+                    //         })
 
-                        }).catch(function (error) {
-                            hideLoader();
-                            showErrorMessage("We are having trouble uploading your profile details.");
-                        });
-                    } else {
-                        hideLoader()
-                        $("html, body").animate({ scrollTop: 0 }, 500);
-                    }
+                    //     }).catch(function (error) {
+                    //         hideLoader();
+                    //         showErrorMessage("We are having trouble uploading your profile details.");
+                    //     });
+                    // } else {
+                    //     hideLoader()
+                    //     $("html, body").animate({ scrollTop: 0 }, 500);
+                    // }
                 }
             })
             ;

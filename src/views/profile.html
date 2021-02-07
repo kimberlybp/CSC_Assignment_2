@@ -73,7 +73,7 @@
                                             <div id="temp"
                                                 style="border:solid black 1px;padding:0.5vw 1vw;margin:0.5vw auto">
                                                 <img id="talentProfilePic" src=""
-                                                    style="display: block; width:100%;height:auto;" alt="Profile Pic">
+                                                    style="display: block; width:110px;height:auto; margin:auto;" alt="Profile Pic">
                                             </div>
                                             <!-- <div id = "signature" style="border: black dotted 1px; margin-top: 1vw;height:5vw">
           <p>Talent' s Signature</p>
@@ -84,6 +84,8 @@
                                 <label class="ui button" for="upload-profilePic-button"
                                     style="margin: 15px auto; display: block;">Upload Profile
                                     Picture</label>
+                                    <div id="removePic" class="ui button" onclick="removeProfilePic()"
+                                    style="margin: 15px auto; display: none;">Remove Profile Picture</div>
                                 <div id="error-message" class="ui red message profilePic"
                                     style="display: none; width: 400px;">
                                 </div>
@@ -208,7 +210,12 @@
                     // { params: { objectID: user.uid } } // returns all plans in db + stripe publishable key
                 ).then(async function (res) {
                     const result = await res.data[0];
-                    document.getElementById("profilePic").src = result.ProfilePic;
+                    if(result.ProfilePic && result.ProfilePic !=="null"){
+                        document.getElementById("profilePic").src = result.ProfilePic;
+                        document.getElementById("removePic").style.display = "block";//button in profile page
+                    }else{
+                        document.getElementById("profilePic").src = '/assets/user.png';
+                    }
                     document.getElementById("nameNav").innerHTML = result.FirstName + ' ' + result.LastName;
                     document.getElementById('profile').style.display = 'block';
                     hideLoader();
@@ -254,10 +261,19 @@
             }
 
             $("#interestTxt").val(data[0].Interest);
-            $("#talentProfilePic").attr("src", data[0].ProfilePic);
+            $("#talentProfilePic").attr("src", data[0].ProfilePic && data[0].ProfilePic !== "null" ? data[0].ProfilePic : '/assets/user.png');
             hideLoader();
         });
     }
+
+    async function removeProfilePic(){
+        $("#talentProfilePic").attr('src', "null");
+        console.log($("#talentProfilePic").attr('src'))
+        showLoader();
+        await saveChanges();
+    }
+
+
 
     //Put MEthod
     function saveChanges() {
@@ -280,6 +296,7 @@
             axios.post('/api/addTalentToAlgolia',
                 {
                     talent: {
+                        TalentId: ID,
                         FirstName: $("#firstNameInput").val(),
                         LastName: $("#lastNameInput").val(),
                         objectID: firebaseId,
@@ -290,16 +307,19 @@
                         ProfilePic: $("#talentProfilePic").attr('src')
                     }
                 }).then(function (res) {
+                    hideLoader();
                     disabledIt();
                     showSuccessMessage('Changes Saved');
+                    location.reload();
                 }).catch(function (e) {
+                    console.log(e);
                     hideLoader();
-                    showErrorMessage("We are having trouble uploading your profile details."); s
+                    showErrorMessage("We are having trouble uploading your profile details."); 
                 });
         });
-        setTimeout(function () {
-            location.reload();
-        }, 2500)
+        // setTimeout(function () {
+        //     location.reload();
+        // }, 2500)
     }
 
     //used for edit/cancel edit
@@ -312,7 +332,7 @@
         document.getElementById("interestTxt").disabled = false;
         document.getElementById("allowEdit").style.display = "none";
         document.getElementById("btnSet").style.display = "block";
-        document.getElementById("upload-profilePic-button2").style.display = "block";
+        //document.getElementById("upload-profilePic-button2").style.display = "block";
     }
     function disabledIt() {
         document.getElementById("firstNameInput").disabled = true;
@@ -323,7 +343,7 @@
         document.getElementById("interestTxt").disabled = true;
         document.getElementById("allowEdit").style.display = "block";
         document.getElementById("btnSet").style.display = "none";
-        document.getElementById("upload-profilePic-button2").style.display = "none";
+       // document.getElementById("upload-profilePic-button2").style.display = "none";
     }
 
     var accessKeyId = 'ASIAZ4BSZKKNZVXZW2EF';
@@ -443,6 +463,7 @@
 
             uploadProfilePicBtn.addEventListener('change', function () {
                 // this.files[0].name;
+                document.getElementById("error-message").style.display = 'none';
                 var errMsg = validateFile(this.files[0]);
                 if (errMsg === "") {
                     var reader = new FileReader();
@@ -480,6 +501,7 @@
                                         ).then(async function (res) {
                                             var profilePicUrl = res.data.url;
                                             $("#talentProfilePic").attr("src", profilePicUrl);
+                                            document.getElementById('removePic').style.display = "block";
                                             await saveChanges();
                                             hideLoader();
                                             showSuccessMessage('Successfully uploaded your picture.')

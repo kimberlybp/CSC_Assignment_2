@@ -145,7 +145,7 @@
                                 </div>
                                 <div class="ui left icon input">
                                     <form id="searchForm" class="ui form">
-                                        <input type="text" name="name" placeholder="Name" />
+                                        <input type="text" name="name" placeholder="Search for talents" />
                                         <button class="ui button" type="submit">Search</button>
                                     </form>
                                 </div>
@@ -162,7 +162,7 @@
 
                         <div class="ui placeholder segment">
                             <div class='ui header'>Recommended Talents for you</div>
-                            <div id="recList"></div>
+                            <div id="recList" style="display: flex;"></div>
                         </div>
 
 
@@ -200,11 +200,9 @@
 </body>
 <script src="js/shared.js"></script>
 <script>
-    function storeTalentId(btnValue) {
-        console.log(btnValue);
-        var TalentId = storageObj[btnValue];
-        console.log(TalentId);
-        localStorage.setItem("TalentId", TalentId);
+    function storeTalentId(id) {
+        sessionStorage.setItem('TalentId', id)
+        window.location.replace('/viewIndividualTalent')
     }
 
     (function ($, window) {
@@ -220,10 +218,8 @@
                     arrayOfTalents = [];
                     data.data.forEach((val) => {
                         console.log(val);
-                        //     var list = `<div class="ui segment"><i class="user icon"></i><a href='/test.html?id=${val.TalentId}'>${val.FirstName} ${val.LastName}</a>
-                        //  <p>${val.Description}</p></div>`;
-
-                        var list = `<div class='ui item'><a href='/viewIndividualTalent'><button style='text-align:left;' class='ui fluid button' > ${val.FirstName} ${val.LastName} <br><br> ${val.Description} </button></div>`
+                        var list = `<div class="ui basic fluid button" style="background-color:white; margin:10px 0" onclick='storeTalentId(${val.TalentId})'><span class="ui blue text">${val.FirstName} ${val.LastName}</span>
+                                 <p>${val.Description && val.Description !== "null" ? val.Description : "No description" }</p></div>`;
                         arrayOfTalents.push(list);
                     });
                     $('#talentsList').empty();

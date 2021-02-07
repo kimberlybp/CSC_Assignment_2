@@ -14,8 +14,10 @@ $(document)
                 ).then(async function (res) {
                     const result = await res.data[0];
                     console.log(result)
-                    if(result.ProfilePic){
+                    if(result.ProfilePic && result.ProfilePic !=="null"){
                         document.getElementById("profilePic").src = result.ProfilePic;
+                    }else{
+                        document.getElementById("profilePic").src = '/assets/user.png';
                     }
                     document.getElementById("name").innerHTML = result.FirstName + ' ' + result.LastName;
                     document.getElementById('profile').style.display = 'block';
