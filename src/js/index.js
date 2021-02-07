@@ -14,7 +14,9 @@ $(document)
                 ).then(async function (res) {
                     const result = await res.data[0];
                     console.log(result)
-                    document.getElementById("profilePic").src = result.ProfilePic;
+                    if(result.ProfilePic){
+                        document.getElementById("profilePic").src = result.ProfilePic;
+                    }
                     document.getElementById("name").innerHTML = result.FirstName + ' ' + result.LastName;
                     document.getElementById('profile').style.display = 'block';
                     hideLoader();
