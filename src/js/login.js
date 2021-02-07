@@ -1,3 +1,8 @@
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        window.location.href = '/';
+    }
+})
 $(document)
     .ready(function () {
         showLoader();
@@ -32,12 +37,13 @@ $(document)
                     }
                 },
                 onSuccess: function (event, fields) {
+                    event.preventDefault();
                     showLoader();
                     firebase.auth().signInWithEmailAndPassword(fields.email, fields.password)
                         .then((userCredential) => {
                             // Signed in
                             var user = userCredential.user;
-                            window.location.href = 'home';
+                            window.location.href = '/';
                         })
                         .catch((error) => {
                             var errorCode = error.code;
@@ -48,7 +54,7 @@ $(document)
                 }
             })
             ;
-            hideLoader();
+        hideLoader();
     })
 function showLoader() {
     document.getElementById('loader').classList.add("active");

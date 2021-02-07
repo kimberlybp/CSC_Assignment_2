@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Talent</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+    <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.7/semantic.min.js"></script>
+   
+</head>
+ 
+<body>
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+     <div class="container">
+        <div class="navbar-header">
+        <a class="navbar-brand" href="/">CSC CA2</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+        <li><a href="/profile/8">Profile</a></li>
+        <li><a href="/Log In">Log In</a></li>
+        </ul>
+    </div>
+</div>
+<div id="recommendTalent" style="width: 50%;margin:0 auto;border:1px black solid">
+    <img id="recommendTalentPic" style="margin:0 auto; width:100%">
+    <label id="firstName">Kwan</label><br>
+    <label id="lastName">Test</label><br>
+    <label id="description">Test</label><br>
+    <label id="age">Test</label><br>
+    <label id="gender">Test</label><br>
+    <label id="interest">Test</label><br>
+    <div style="width: 100%;text-align: center;">
+<button id="Test" onclick="get()" style="margin:2vw auto; border-radius: 3px;">Show Recommend</button>
+</div>
+</div>
+</body>
+</html>
+<style>
+    #recommendTalent label{
+        margin-left: 3vw;
+        width: 80%;
+    }
+</style>
+<script>
+
+
+ get();
+    function get() {  
+    var recommendTalentIdArray = [];
+    let loadedId=0;
+    var allTalents=[];
+    var noOfTalent=0;
+    $.ajax({
+            method: 'GET',
+            url: 'https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail',
+            dataType: 'json',
+        }).done(function (data) {
+            console.log(data);
+            console.log(data.length);
+            noOfTalent = data.length;
+            
+           id=Math.floor(Math.random()*(data.length-0)+0);
+           console.log(data[id]);
+           //Remember to change this kimkim => Change to data[id].ProfilePic
+           $("#recommendTalentPic").attr("src", "https://media.geeksforgeeks.org/wp-content/uploads/20190529122828/bs21.png");
+           $("#firstName").text("First Name : "+data[id].FirstName);
+           $("#lastName").text("Last Name : "+data[id].LastName);
+           $("#description").text("Description : "+data[id].Description);
+           $("#age").text("Age : "+data[id].Age);
+           $("#gender").text("First Name : "+data[id].Gender);
+           $("#interest").text("First Name : "+data[id].Interest);
+        })
+    }
+    
+   
+</script>

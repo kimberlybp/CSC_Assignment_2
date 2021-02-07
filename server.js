@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 
+const dbService = require('./connect.js');
+const fetch = require('node-fetch');
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -38,10 +40,63 @@ app.get('/signup', function (req, res) {
   const filePath = path.resolve(__dirname + "/src/views/signUp.html");
   res.sendFile(filePath);
 });
+//agolia
+const agoliaSearch = require('algoliasearch');
+const client = agoliaSearch(process.env.APP_KEY, process.env.ADMIN_KEY);
+const index = client.initIndex('talents');
 
 app.get('/setUpProfile', function (req, res) {
   const filePath = path.resolve(__dirname + "/src/views/setUpProfile.html");
   res.sendFile(filePath);
+
+});
+
+// async function initialUpload() {
+//     await fetch('https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail')
+//         .then((res) => res.json())
+//         .then((data) => {
+//             console.log(data);
+//             index
+//                 .saveObjects(data)
+//                 .then(({ objectIDs }) => {
+//                     console.log(objectIDs);
+//                 })
+//                 .catch((err) => {
+//                     console.log(err);
+//                 });
+//         });
+// }
+// initialUpload();
+
+app.get('/search', function (req, res) {
+    let array = [];
+    let query = req.query.query;
+    if (query) {
+        index
+            .search(query, {
+                attributesToRetrieve: [
+                    'objectID',
+                    'TalentId',
+                    'FirstName',
+                    'LastName',
+                    'Description',
+                    'Gender',
+                    'Age',
+                    'Interst',
+                ],
+                hitsPerPage: 50,
+            })
+            .then(({ hits }) => {
+                Object.values(hits).forEach((value) => {
+                    array.push(value);
+                });
+                if (array.length > 0) {
+                    res.send({ data: hits });
+                } else res.send(`No record(s) available.`);
+            })
+            .catch((err) => res.status(400).send(`Error executing search: ${err}`));
+    } else res.status(400).send(`Please provide a query string.`);
+
 });
 
 app.get('/setUpPlan', function (req, res) {
@@ -50,7 +105,7 @@ app.get('/setUpPlan', function (req, res) {
   });
 
 app.get('/home', function (req, res) {
-  const filePath = path.resolve(__dirname + "/src/views/home.html");
+  const filePath = path.resolve(__dirname + "/src/views/index.html");
   res.sendFile(filePath);
 });
 
@@ -58,6 +113,37 @@ app.get('/paymentSetupSuccess', function (req, res) {
     const filePath = path.resolve(__dirname + "/src/views/paymentSetupSuccess.html");
     res.sendFile(filePath);
   });
+
+  app.get('/discover', function (req, res) {
+    const filePath = path.resolve(__dirname + '/src/views/discover.html');
+    res.sendFile(filePath);
+});
+
+  app.get('/search', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/talentDetails.html");
+    res.sendFile(filePath);
+  });
+
+  app.get('/profile', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/profile.html");
+    res.sendFile(filePath);
+  });
+
+  app.get('/profile', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/profile.html");
+    res.sendFile(filePath);
+  });
+
+  app.get('/weixian', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/talentDetails.html");
+    res.sendFile(filePath);
+  });
+
+  app.get('/viewIndividualTalent', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/viewIndividualTalent.html");
+    res.sendFile(filePath);
+  });
+
 
 
 require('./routes')(app);
@@ -67,76 +153,7 @@ app.get('/subscribe', function (req, res) {
     res.sendFile(filePath);
 });
 
-app.post('/customer-portal', async (req, res) => {
-    const session = await stripe.billingPortal.sessions.create({
-        customer: '',
-        return_url: 'http://localhost:3000/index.html',
-    });
-    sessionURL = session.url;
-    res.redirect(session.url);
-});
-
-app.get('/checkout-session', async (req, res) => {
-    const { sessionId } = req.query;
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    res.send(session);
-});
-
-app.post('/create-checkout-session', async (req, res) => {
-    const domainURL = process.env.DOMAIN;
-    const { priceId } = req.body;
-
-    try {
-        const session = await stripe.checkout.sessions.create({
-            mode: 'subscription',
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price: priceId,
-                    quantity: 1,
-                },
-            ],
-            // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-            success_url: `${domainURL}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${domainURL}/canceled.html`,
-        });
-
-        res.send({
-            sessionId: session.id,
-        });
-    } catch (e) {
-        res.status(400);
-        return res.send({
-            error: {
-                message: e.message,
-            },
-        });
-    }
-});
-
-app.post('/customer-portal-byId', async (req, res) => {
-    const { customerId } = req.body;
-
-    const portalsession = await stripe.billingPortal.sessions.create({
-        customer: customerId,
-        return_url: process.env.DOMAIN,
-    });
-
-    res.send({
-        url: portalsession.url,
-    });
-});
-
-app.get('/setup', (req, res) => {
-    res.send({
-        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-        freePrice: process.env.FREE_PRICE_ID,
-        proPrice: process.env.PREMIUM_PRICE_ID,
-    });
-});
-
-
-// listens to webhook
+// listens to stripe webhook (TODO AGAIN)
 app.post('/webhook', (request, response) => {
     const event = request.body;
 
@@ -185,48 +202,6 @@ app.post('/webhook', (request, response) => {
         response.status(400).send(`Webhook Error: ${err.message}`);
     }
 });
-
-async function sendToDB(eventid, id, type, datetime, timestamp, product) {
-    var obj = {
-        eventid: eventid,
-        id: id,
-        type: type,
-        createdAt: datetime,
-        timestamp: timestamp,
-        product: product,
-    };
-    //console.log(obj);
-
-    var oneRow = db.collection('subscription-log').doc(obj.id);
-
-    await oneRow
-        .set(obj)
-        .then(console.log(`object added!`))
-        .catch((err) => {
-            console.log(`adding failed`, err);
-        });
-}
-
-async function sendToDBAgain(eventid, id, type, datetime, timestamp, product) {
-    var obj = {
-        eventid: eventid,
-        id: id,
-        type: type,
-        createdAt: datetime,
-        timestamp: timestamp,
-        product: product,
-    };
-    //console.log(obj);
-
-    var oneRow = db.collection('subscription-log').doc(obj.id);
-
-    await oneRow
-        .update(obj)
-        .then(console.log(`object added!`))
-        .catch((err) => {
-            console.log(`adding failed`, err);
-        });
-}
 
 function createDateTimeString(timestamp) {
     var date = new Date(timestamp * 1000);

@@ -9,8 +9,11 @@ admin.initializeApp(
 );
 
 const firestore = admin.firestore();
+const agoliaSearch = require('algoliasearch');
+const client = agoliaSearch(process.env.ALGOLIA_APP_KEY, process.env.ALGOLIA_ADMIN_KEY);
+const algoliaIndex = client.initIndex('talents');
 
-const talentDetails = require('./api/talentDetails')(connect, s3, firestore);
+const talentDetails = require('./api/talentDetails')(connect, s3, firestore, algoliaIndex);
 const plans = require('./api/plans')(connect);
 const stripeApi = require('./api/stripe')(stripe);
 
@@ -19,12 +22,17 @@ function routes(app) {
     app.post('/api/postTalentDetails',talentDetails.post);
     app.post('/api/postTalentWithFirebase', talentDetails.postWithFirebase);
     app.post('/api/postTalentProfilePicture', talentDetails.postProfilePicture);
-    app.post('/api/postUserSubscriptionPlan', talentDetails.postUserSubscriptionPlan)
+    app.post('/api/postUserSubscriptionPlan', talentDetails.postUserSubscriptionPlan);
+    app.get('/api/getTalentDetailsByFirebase', talentDetails.getTalentDetailsByFirebase);
     app.get('/api/getAllPlans', plans.getAll);
     app.post('/api/createFreeCheckoutSession', stripeApi.createFreeCheckoutSession);
     app.post('/api/createPaidCheckoutSession', stripeApi.createPaidCheckoutSession);
     app.get('/api/getCheckoutSessionData', stripeApi.getCheckoutSessionData);
     app.post('/api/createNewCustomer', stripeApi.createNewCustomer);
+    app.get('/api/searchTalents', talentDetails.search);
+    app.post('/api/addTalentToAlgolia', talentDetails.addTalentToAlgolia);
+    app.get('/api/getTalentDataFromFirestore', talentDetails.getTalentDataFromFirestore);
+    app.get('/api/getCustomerPortal', stripeApi.getCustomerPortal);
 }
 
 module.exports = routes;

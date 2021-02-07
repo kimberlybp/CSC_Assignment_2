@@ -1,0 +1,6 @@
+#userMenu ul li:hover {
+    background-color: #9FC5E8;
+    transition: 0.3s;
+    padding-left: 10px;
+    padding-right: 10px;
+}

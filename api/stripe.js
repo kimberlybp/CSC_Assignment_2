@@ -105,12 +105,26 @@ function stripeApi(stripe) {
         }
     }
 
+    async function getCustomerPortal(req, res) {
+        const { customerId } = req.query;
+
+        const portalsession = await stripe.billingPortal.sessions.create({
+            customer: customerId,
+            return_url: process.env.DOMAIN,
+        });
+
+        res.status(200).json({
+            url: portalsession.url,
+        });
+    }
+
 
     return {
         createFreeCheckoutSession: createFreeCheckoutSession,
         getCheckoutSessionData: getCheckoutSessionData,
         createNewCustomer: createNewCustomer,
-        createPaidCheckoutSession: createPaidCheckoutSession
+        createPaidCheckoutSession: createPaidCheckoutSession,
+        getCustomerPortal: getCustomerPortal
     }
 
 }
