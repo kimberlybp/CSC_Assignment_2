@@ -1,3 +1,8 @@
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        window.location.href = '/';
+    }
+})
 $(document)
     .ready(function () {
         showLoader();
@@ -49,7 +54,7 @@ $(document)
                 }
             })
             ;
-            hideLoader();
+        hideLoader();
     })
 function showLoader() {
     document.getElementById('loader').classList.add("active");

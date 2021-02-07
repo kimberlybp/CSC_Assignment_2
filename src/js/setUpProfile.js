@@ -170,7 +170,7 @@ $(document)
                                 objectID: currentUser.uid,
                                 Interest: fields.interest,
                                 Description: fields.description.replace(/(["'])/g, "\\$1"),
-                                Gender: fields.gender.charAt(fields.gender.length-1),
+                                Gender: fields.gender.charAt(fields.gender.length - 1),
                                 Age: fields.age,
                                 ProfilePic: profilePicUrl
                             }
@@ -180,7 +180,25 @@ $(document)
                             // document.getElementById('profilePic-preview').src = e.target.result;
                             // showSuccessMessage("Profile picture is human and successfully uploaded.");
 
-                            window.location.href = 'setUpPlan';
+                            axios.post('/api/addTalentToAlgolia',
+                                {
+                                    talent: {
+                                        FirstName: fields.firstName,
+                                        LastName: fields.lastName,
+                                        objectID: currentUser.uid,
+                                        Interest: fields.interest,
+                                        Description: fields.description.replace(/(["'])/g, "\\$1"),
+                                        Gender: fields.gender.charAt(fields.gender.length - 1),
+                                        Age: fields.age,
+                                        ProfilePic: profilePicUrl
+                                    }
+                                }).then(function (res) {
+                                    window.location.href = 'setUpPlan';
+                                }).catch(function (e) {
+                                    hideLoader();
+                                    showErrorMessage("We are having trouble uploading your profile details."); s
+                                })
+
                         }).catch(function (error) {
                             hideLoader();
                             showErrorMessage("We are having trouble uploading your profile details.");
@@ -192,14 +210,14 @@ $(document)
                 }
             })
             ;
-            hideLoader();
+        hideLoader();
     })
     ;
 
-    function showLoader() {
-        document.getElementById('loader').classList.add("active");
-    }
-    
-    function hideLoader() {
-        document.getElementById('loader').classList.remove("active");
-    }
+function showLoader() {
+    document.getElementById('loader').classList.add("active");
+}
+
+function hideLoader() {
+    document.getElementById('loader').classList.remove("active");
+}

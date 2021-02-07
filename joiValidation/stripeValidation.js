@@ -3,6 +3,9 @@ const Joi = require('joi');
 const createFreeCheckoutSessionSchema = Joi.object({
     customerId: Joi.string()
         .trim()
+        .required(),
+    priceId: Joi.string()
+        .trim()
         .required()
 });
 

@@ -76,110 +76,106 @@
                                                     style="display: block; width:100%;height:auto;" alt="Profile Pic">
                                             </div>
                                             <!-- <div id = "signature" style="border: black dotted 1px; margin-top: 1vw;height:5vw">
-          <p>Talent's Signature</p>
-        </div> -->
-                                            <div>
-                                                <input type="file" id="upload-profilePic-button" hidden
-                                                    style="display: none;" />
+          <p>Talent' s Signature</p>
+                            </div> -->
+                            <div>
+                                <input type="file" id="upload-profilePic-button" hidden style="display: none;" />
 
-                                                <label class="ui button" for="upload-profilePic-button"
-                                                    style="margin: 15px auto; display: block;">Upload Profile
-                                                    Picture</label>
-                                                <div id="error-message" class="ui red message profilePic"
-                                                    style="display: none; width: 400px;">
-                                                </div>
-                                            </div>
-                                        </div>
+                                <label class="ui button" for="upload-profilePic-button"
+                                    style="margin: 15px auto; display: block;">Upload Profile
+                                    Picture</label>
+                                <div id="error-message" class="ui red message profilePic"
+                                    style="display: none; width: 400px;">
+                                </div>
+                            </div>
+                        </div>
 
-                                        <div class="col-sm-8" style="border:black solid 1px;">
-                                            <div style="margin-top: 1vw;margin-bottom: 1vw;">
-                                                <u style="font-size: large; " class="ui header">Profile Details</u>
-                                                <button id="allowEdit" class="ui button" onclick="enabled()" style="float: right; margin-bottom: 10px;">Edit
-                                                    Profile Details</button>
-                                                <button id="denyEdit" onclick="disabledIt()"
-                                                    style="float: right;display:none;">Cancel</button>
-                                            </div>
-                                            <form class="form-horizontal">
-                                                <div class="form-group">
-                                                    <label for="inputEmail" class="col-sm-3 control-label">First Name
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="firstNameInput"
-                                                            placeholder="Name" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputEmail" class="col-sm-3 control-label">Last Name
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="lastNameInput"
-                                                            placeholder="Name" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputPassword3" class="col-sm-3 control-label">Full
-                                                        Description</label>
-                                                    <div class="col-sm-9">
-                                                        <textarea class="form-control" id="descriptionTxt" rows="3"
-                                                            disabled></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="inputEmail3" class="col-sm-3 control-label">Age </label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="ageInput"
-                                                            placeholder="Age" disabled>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="inputEmail3" class="col-sm-3 control-label">Gender
-                                                    </label>
-                                                    <div class="col-sm-9">
-
-                                                        <select id="genderSelect" class="form-control" disabled>
-                                                            <option value="M">Male</option>
-                                                            <option value="F">Female</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="inputEmail3" class="col-sm-3 control-label">Interest
-                                                    </label>
-                                                    <div class="col-sm-9">
-                                                        <textarea class="form-control" id="interestTxt" rows="3"
-                                                            disabled></textarea>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-3 col-sm-3">
-
-
-                                                    </div>
-                                                    <div class="col-sm col-sm-3">
-                                                        <!-- <button type="submit" class="btn-block btn-default">Cancel</button> -->
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <div id="btnSet" style="margin-bottom: 2vw;display: none;">
-                                                <button id="btnSave" style="margin:0 2vw;width:15vw;"
-                                                    onclick="saveChanges()">Save
-                                                    Changes</button>
-                                                <button id="btnCancel" style="width:15vw;"
-                                                    onclick="disabledIt()">Cancel</button>
-                                            </div>
-                                        </div>
+                        <div class="col-sm-8" style="border:black solid 1px;">
+                            <div style="margin-top: 1vw;margin-bottom: 1vw;">
+                                <u style="font-size: large; " class="ui header">Profile Details</u>
+                                <button id="allowEdit" class="ui button" onclick="enabled()"
+                                    style="float: right; margin-bottom: 10px;">Edit
+                                    Profile Details</button>
+                                <button id="denyEdit" onclick="disabledIt()"
+                                    style="float: right;display:none;">Cancel</button>
+                            </div>
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="inputEmail" class="col-sm-3 control-label">First Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="firstNameInput" placeholder="Name"
+                                            disabled>
                                     </div>
                                 </div>
-                                <div id="pictureContainer"></div>
-                            </div>
-                            <div id="line" style="width: 100%;height:1px;background-color: black;margin-top:1vw;"></div>
-                            <div id="photoCollection">
+                                <div class="form-group">
+                                    <label for="inputEmail" class="col-sm-3 control-label">Last Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="lastNameInput" placeholder="Name"
+                                            disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-3 control-label">Full
+                                        Description</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" id="descriptionTxt" rows="3" disabled></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEmail3" class="col-sm-3 control-label">Age </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="ageInput" placeholder="Age"
+                                            disabled>
+                                    </div>
+                                </div>
 
+                                <div class="form-group">
+                                    <label for="inputEmail3" class="col-sm-3 control-label">Gender
+                                    </label>
+                                    <div class="col-sm-9">
+
+                                        <select id="genderSelect" class="form-control" disabled>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputEmail3" class="col-sm-3 control-label">Interest
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" id="interestTxt" rows="3" disabled></textarea>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-3">
+
+
+                                    </div>
+                                    <div class="col-sm col-sm-3">
+                                        <!-- <button type="submit" class="btn-block btn-default">Cancel</button> -->
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="btnSet" style="margin-bottom: 2vw;display: none;">
+                                <button id="btnSave" style="margin:0 2vw;width:15vw;" onclick="saveChanges()">Save
+                                    Changes</button>
+                                <button id="btnCancel" style="width:15vw;" onclick="disabledIt()">Cancel</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="pictureContainer"></div>
+            </div>
+            <div id="line" style="width: 100%;height:1px;background-color: black;margin-top:1vw;"></div>
+            <div id="photoCollection">
+
+            </div>
 </body>
 
 </html>
@@ -194,10 +190,12 @@
         .dropdown()
         ;
     let ID = null;
+    let firebaseId = null;
     firebase.auth().onAuthStateChanged(function (user) {
         showLoader();
         if (user) {
             document.getElementById('login-signup').style.display = 'none';
+            firebaseId = user.uid;
             axios.get(
                 `https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail/objectID/TalentId/${user.uid}`,
                 // { params: { objectID: user.uid } } // returns all plans in db + stripe publishable key
@@ -279,6 +277,25 @@
         };
         $.ajax(settings).done(function (response) {
             console.log(response);
+            axios.post('/api/addTalentToAlgolia',
+                {
+                    talent: {
+                        FirstName: $("#firstNameInput").val(),
+                        LastName: $("#lastNameInput").val(),
+                        objectID: firebaseId,
+                        Interest: $("#interestTxt").val(),
+                        Description: $("#descriptionTxt").val().replace(/(["'])/g, "\\$1"),
+                        Gender: $("#genderSelect").val(),
+                        Age: $("#ageInput").val(),
+                        ProfilePic: $("#talentProfilePic").attr('src')
+                    }
+                }).then(function (res) {
+                    disabledIt();
+                    showSuccessMessage('Changes Saved');
+                }).catch(function (e) {
+                    hideLoader();
+                    showErrorMessage("We are having trouble uploading your profile details."); s
+                });
         });
         setTimeout(function () {
             location.reload();
