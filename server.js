@@ -74,55 +74,22 @@ app.get('/paymentSetupSuccess', function (req, res) {
     res.sendFile(filePath);
   });
 
-//agolia
+  app.get('/profile', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/profile.html");
+    res.sendFile(filePath);
+  });
 
-// const objects = [
-//     {
-//         objectID: 'myID1',
-//         firstname: 'Jimmie',
-//         lastname: 'Barninger',
-//     },
-//     {
-//         objectID: 'myID2',
-//         firstname: 'Warren',
-//         lastname: 'Speach',
-//     },
-// ];
+  app.get('/talents', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/talents.html");
+    res.sendFile(filePath);
+  });
 
-// index.saveObjects(objects).then(({ objectIDs }) => {
-//     console.log(objectIDs);
-// });
-// app.get('/search', function (req, res) {
-//     let array = [];
-//     let query = req.body.query;
-//     if (query) {
-//         index
-//             .search(query, {
-//                 attributesToRetrieve: ['firstname', 'lastname'],
-//                 hitsPerPage: 50,
-//             })
-//             .then(({ hits }) => {
-//                 Object.values(hits).forEach((value) => {
-//                     array.push(value);
-//                 });
-//                 if (array.length > 0) {
-//                     res.send({ data: hits });
-//                 } else res.send(`No record(s) available.`);
-//             })
-//             .catch((err) => res.status(400).send(`Error executing search: ${err}`));
-//     } else res.status(400).send(`Please provide a query string.`);
-// });
-app.post('/search', function (req, res) {
-    const db = dbService.getDbServiceInstance();
-    //console.log(req.body);
+  app.get('/viewIndividualTalent', function (req, res) {
+    const filePath = path.resolve(__dirname + "/src/views/viewIndividualTalent.html");
+    res.sendFile(filePath);
+  });
 
-    const result = db.searchTalentByFirstName(req.body.query);
-    result
-        .then(res.send('Comment stored in database!'))
-        .catch((err) => res.status(400).send(`Error adding comment: ${err}`));
-    pusher.trigger('flash-comments', 'new_comment', newComment);
-    res.json({ created: true });
-});
+
 
 require('./routes')(app);
 
@@ -131,29 +98,7 @@ app.get('/subscribe', function (req, res) {
     res.sendFile(filePath);
 });
 
-app.post('/customer-portal-byId', async (req, res) => {
-    const { customerId } = req.body;
-
-    const portalsession = await stripe.billingPortal.sessions.create({
-        customer: customerId,
-        return_url: process.env.DOMAIN,
-    });
-
-    res.send({
-        url: portalsession.url,
-    });
-});
-
-app.get('/setup', (req, res) => {
-    res.send({
-        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-        freePrice: process.env.FREE_PRICE_ID,
-        proPrice: process.env.PREMIUM_PRICE_ID,
-    });
-});
-
-
-// listens to webhook
+// listens to stripe webhook (TODO AGAIN)
 app.post('/webhook', (request, response) => {
     const event = request.body;
 
@@ -202,48 +147,6 @@ app.post('/webhook', (request, response) => {
         response.status(400).send(`Webhook Error: ${err.message}`);
     }
 });
-
-async function sendToDB(eventid, id, type, datetime, timestamp, product) {
-    var obj = {
-        eventid: eventid,
-        id: id,
-        type: type,
-        createdAt: datetime,
-        timestamp: timestamp,
-        product: product,
-    };
-    //console.log(obj);
-
-    var oneRow = db.collection('subscription-log').doc(obj.id);
-
-    await oneRow
-        .set(obj)
-        .then(console.log(`object added!`))
-        .catch((err) => {
-            console.log(`adding failed`, err);
-        });
-}
-
-async function sendToDBAgain(eventid, id, type, datetime, timestamp, product) {
-    var obj = {
-        eventid: eventid,
-        id: id,
-        type: type,
-        createdAt: datetime,
-        timestamp: timestamp,
-        product: product,
-    };
-    //console.log(obj);
-
-    var oneRow = db.collection('subscription-log').doc(obj.id);
-
-    await oneRow
-        .update(obj)
-        .then(console.log(`object added!`))
-        .catch((err) => {
-            console.log(`adding failed`, err);
-        });
-}
 
 function createDateTimeString(timestamp) {
     var date = new Date(timestamp * 1000);

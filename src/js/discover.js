@@ -1,8 +1,10 @@
+
+let storageObj = {};
 $(document)
     .ready(function () {
         $('.ui.dropdown')
-  .dropdown()
-;
+            .dropdown()
+            ;
         showLoader();
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -22,14 +24,43 @@ $(document)
                 hideLoader();
             }
         });
+
+
+
+        loadData();
+
+        function loadData() {
+            $.ajax({
+                type: "GET",
+                url: "https://amqlyvytfc.execute-api.us-east-1.amazonaws.com/live/talentdetail",
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var btnValue = 'button' + i;
+
+                        var list = "<div class='ui item'><a href='/viewIndividualTalent'><button style='text-align:left;' class='ui fluid button' value='" + btnValue + "' onclick=storeTalentId('" + btnValue + "'); >" + data[i].FirstName + " " + data[i].LastName + "<br><br>" + data[i].Description + "</button></div>"
+                        $("#talentsList").append(list);
+
+                        storageObj[btnValue] = data[i].TalentId;
+
+                    }
+                    console.log(storageObj);
+                },
+                error: function (data) {
+                }
+            });
+        }
+
+
+
+
     })
 
-    function showLoader() {
-        document.getElementById('loader').classList.add("active");
-    }
-    
-    function hideLoader() {
-        document.getElementById('loader').classList.remove("active");
-    }
+function showLoader() {
+    document.getElementById('loader').classList.add("active");
+}
+
+function hideLoader() {
+    document.getElementById('loader').classList.remove("active");
+}
 
 

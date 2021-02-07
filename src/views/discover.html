@@ -153,7 +153,19 @@
                     <i class="circular search link icon"></i>
                   </div>
               </div>
+              <div class="ui container" id="userMenu">
+                <h2 class='ui header'>Results</h2>
+                <div class="ui list" id="talentsList">
+                </div>
+            </div>
 
+        </div>
+
+
+
+        <div class="ui placeholder segment">
+            <div class='ui header'>Recommended Talents for you</div>
+            <div id="recList"></div>
         </div>
 
 
@@ -189,5 +201,12 @@
 
 </body>
 <script src="js/shared.js"></script>
+<script>function storeTalentId(btnValue) {
+    console.log(btnValue);
+    var TalentId = storageObj[btnValue];
+    console.log(TalentId);
+    localStorage.setItem("TalentId", TalentId);
+}
+</script>
 
 </html>
