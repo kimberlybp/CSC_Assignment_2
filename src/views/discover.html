@@ -200,11 +200,9 @@
 </body>
 <script src="js/shared.js"></script>
 <script>
-    function storeTalentId(btnValue) {
-        console.log(btnValue);
-        var TalentId = storageObj[btnValue];
-        console.log(TalentId);
-        localStorage.setItem("TalentId", TalentId);
+    function storeTalentId(id) {
+        sessionStorage.setItem('TalentId', id)
+        window.location.replace('/viewIndividualTalent')
     }
 
     (function ($, window) {
@@ -213,17 +211,15 @@
         document.getElementById('searchForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            fetch(`http://localhost:3000/api/searchTalents?query=${[...formData][0][1]}`)
+            fetch(`http://localhost:3000/search?query=${[...formData][0][1]}`)
                 .then((res) => res.json())
                 .then((data) => {
                     console.log(data.data);
                     arrayOfTalents = [];
                     data.data.forEach((val) => {
                         console.log(val);
-                        //     var list = `<div class="ui segment"><i class="user icon"></i><a href='/test.html?id=${val.TalentId}'>${val.FirstName} ${val.LastName}</a>
-                        //  <p>${val.Description}</p></div>`;
-
-                        var list = `<div class='ui item'><a href='/viewIndividualTalent'><button style='text-align:left;' class='ui fluid button' > ${val.FirstName} ${val.LastName} <br><br> ${val.Description} </button></div>`
+                        var list = `<div class="ui segment" onclick='storeTalentId(${val.TalentId})'><span class="ui blue text">${val.FirstName} ${val.LastName}</span>
+                                 <p>${val.Description}</p></div>`;
                         arrayOfTalents.push(list);
                     });
                     $('#talentsList').empty();
